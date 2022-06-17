@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
-    
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
     #? Custom apps
     'api',
 ]
@@ -310,9 +311,9 @@ REST_FRAMEWORK = {
      'rest_framework.authentication.SessionAuthentication',
      'rest_framework.authentication.BasicAuthentication'),
 
-    # #? DRF Schema Class
-    # 'DEFAULT_SCHEMA_CLASS':
-    # 'drf_spectacular.openapi.AutoSchema',
+    #? DRF Schema Class
+    'DEFAULT_SCHEMA_CLASS':
+    'drf_spectacular.openapi.AutoSchema',
 
     # #TODO: Permisions
     # 'DEFAULT_PERMISSION_CLASSES': (
@@ -343,4 +344,58 @@ REST_FRAMEWORK = {
     # 'DEFAULT_VERSION': '1.0',
     # 'ALLOWED_VERSIONS': ('1.0',),
     # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+}
+
+#? Spectacular Config
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Open Course Ware API',
+    'DESCRIPTION': 'API for Open Course Ware',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+        'displayOperationId': True,
+        'displayRequestDuration': True,
+        'filter': True,
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format':
+            '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/opencourseware.log',
+            'formatter': 'verbose',
+            'backupCount': 5,
+            'maxBytes': 10485760,  #? 10 MB
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
