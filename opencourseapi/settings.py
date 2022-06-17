@@ -42,11 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
+    'rest_framework_simplejwt',
+    
+    #? Custom apps
+    'api',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  #? CORS
+    'whitenoise.middleware.WhiteNoiseMiddleware',  #? Whitenoise
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -125,6 +131,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 # yapf: disable
 #? Jazzmin settings
@@ -293,3 +301,46 @@ JAZZMIN_UI_TWEAKS={
 }
 
 # yapf: enable
+
+#? DRF Config
+REST_FRAMEWORK = {
+    #? Authentication Config
+    'DEFAULT_AUTHENTICATION_CLASSES':
+    ('rest_framework_simplejwt.authentication.JWTAuthentication',
+     'rest_framework.authentication.SessionAuthentication',
+     'rest_framework.authentication.BasicAuthentication'),
+
+    # #? DRF Schema Class
+    # 'DEFAULT_SCHEMA_CLASS':
+    # 'drf_spectacular.openapi.AutoSchema',
+
+    # #TODO: Permisions
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ),
+
+    #TODO: Pagination Config
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 10,
+
+    #TODO: Filters Config
+    # 'DEFAULT_FILTER_BACKENDS': (
+    #     'django_filters.rest_framework.DjangoFilterBackend',
+    # ),
+
+    #TODO: API Throttling Config
+    # 'DEFAULT_THROTTLE_CLASSES': (
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle'
+    # ),
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '1000/day',
+    #     'user': '1000/day'
+    # },
+
+    #TODO: Versioning related Config
+    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    # 'DEFAULT_VERSION': '1.0',
+    # 'ALLOWED_VERSIONS': ('1.0',),
+    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+}
