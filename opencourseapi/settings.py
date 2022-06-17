@@ -11,26 +11,30 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from environs import Env
+import dj_database_url
+
+env = Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l&-v&+rt8gp)q-a47ky_$@u4tjc5!*vinl9oz#b+*m%r)714#7'
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -69,36 +74,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'opencourseapi.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(conn_max_age=600),
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -111,13 +114,181 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# yapf: disable
+#? Jazzmin settings
+JAZZMIN_SETTINGS = {
+    #? title of the window (Will default to current_admin_site.site_title if absent or None)
+    'site_title': 'Open Course Ware API Admin',
+
+    #? Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    'site_header': 'Open Course Ware',
+
+    #? Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    'site_brand': 'Open Course Ware',
+
+    #? Logo to use for your site, must be present in static files, used for brand on top left
+    # 'site_logo': 'books/img/logo.png',
+
+    #? Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
+    # 'login_logo': None,
+
+    #? CSS classes that are applied to the logo above
+    # 'site_logo_classes': 'img-circle',
+
+    #? Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
+    # 'site_icon': None,
+
+    #? Welcome text on the login screen
+    'welcome_sign': 'Welcome to the Open Course Ware',
+
+    #? Copyright on the footer
+    'copyright': 'Open Course Ware',
+
+    #? The model admin to search from the search bar, search bar omitted if excluded
+    # 'search_model': 'auth.User',
+
+    #? Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
+    # 'user_avatar': None,
+
+    ############
+    # Top Menu #
+    ############
+
+    #? Links to put along the top menu
+    'topmenu_links': [
+
+        #? Url that gets reversed (Permissions can be added)
+        {
+            'name': 'Home',
+            'url': 'admin:index',
+            'permissions': ['auth.view_user']
+        },
+
+        #? model admin to link to (Permissions checked against model)
+        {
+           # 'model': 'user.User'
+            'model': 'auth.User'
+        },
+
+        # #? JSON Schema Link
+        # {
+        #     'name': 'Schema JSON', 'url': '/api/schema/json/', 'new_window': True
+        # },
+
+        # #? Swagger Link
+        # {
+        #     'name': 'Swagger', 'url': '/api/schema/swagger/', 'new_window': True
+        # },
+
+        # #? Redoc Link
+        # {
+        #     'name': 'Redoc', 'url': '/api/schema/redoc/', 'new_window': True
+        # },
+
+
+    ],
+
+    #############
+    # Side Menu #
+    #############
+
+    #? Whether to display the side menu
+    'show_sidebar': True,
+
+    #? Whether to aut expand the menu
+    'navigation_expanded': True,
+
+    #? Hide these apps when generating side menu e.g (auth)
+    'hide_apps': [],
+
+    #? Hide these models when generating side menu (e.g auth.user)
+    'hide_models': [],
+
+    #? List of apps (and/or models) to base side menu ordering off of (does not need to contain all apps/models)
+    'order_with_respect_to': ['auth'],
+
+    #? Custom icons for side menu apps/models
+    'icons': {
+        'auth': 'fas fa-users-cog',
+        'auth.user': 'fas fa-user',
+        # 'user': 'fas fa-user-cog',
+         'auth.Group': 'fas fa-users',
+        # 'college': 'fas fa-university',
+        # 'college.CollegeModel': 'fas fa-university',
+    },
+
+    #? Icons that are used when one is not manually specified
+    'default_icon_parents': 'fas fa-chevron-circle-right',
+    'default_icon_children': 'fas fa-archive',
+
+    #################
+    # Related Modal #
+    #################
+    #? Use modals instead of popups
+    'related_modal_active': False,
+
+    #############
+    # UI Tweaks #
+    #############
+    #? Relative paths to custom CSS/JS scripts (must be present in static files)
+    'custom_css': None,
+    'custom_js': None,
+    #? Whether to show the UI customizer on the sidebar
+    'show_ui_builder': False,
+
+    ###############
+    # Change view #
+    ###############
+    #? Render out the change view as a single form, or in tabs, current options are
+    #? - single
+    #? - horizontal_tabs (default)
+    #? - vertical_tabs
+    #? - collapsible
+    #? - carousel
+    'changeform_format': 'horizontal_tabs',
+}
+
+JAZZMIN_UI_TWEAKS={
+    'footer_small_text': False,
+    'body_small_text': False,
+    'brand_small_text': False,
+    'brand_colour': False,
+    'accent': 'accent-primary',
+    'navbar': 'navbar-white navbar-light',
+    'no_navbar_border': False,
+    'navbar_fixed': True,
+    'layout_boxed': False,
+    'footer_fixed': False,
+    'sidebar_fixed': True,
+    'sidebar': 'sidebar-light-primary',
+    'sidebar_nav_small_text': False,
+    'sidebar_disable_expand': False,
+    'sidebar_nav_child_indent': False,
+    'sidebar_nav_compact_style': False,
+    'sidebar_nav_legacy_style': False,
+    'sidebar_nav_flat_style': False,
+    'theme': 'default',
+    # 'dark_mode_theme': None,
+    'button_classes': {
+        'primary': 'btn-outline-primary',
+        'secondary': 'btn-outline-secondary',
+        'info': 'btn-outline-info',
+        'warning': 'btn-outline-warning',
+        'danger': 'btn-outline-danger',
+        'success': 'btn-outline-success'
+    },
+    'actions_sticky_top': True
+}
+
+# yapf: enable
