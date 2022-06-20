@@ -24,7 +24,7 @@
 
   #### Easy, copy .env.demo and add its content to .env
 
-### 🥂
+## 🥂
   # There you go buddy. Happy Coding.
 
 
