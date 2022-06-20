@@ -20,11 +20,11 @@
 
 ## Wait! why such hury? ✋🛑
   ### Add a .env file dude
-    ####  Don't know it content??
+   ##### Don't know it content??
 
-### Easy, copy .env.demo and add its content to .env
+  #### Easy, copy .env.demo and add its content to .env
 
-## 🥂
+### 🥂
   # There you go buddy. Happy Coding.
 
 
