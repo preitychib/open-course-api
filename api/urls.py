@@ -1,3 +1,4 @@
+import imp
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -5,6 +6,8 @@ from rest_framework_simplejwt.views import (
 )
 #? drf-spectacular
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView, SpectacularJSONAPIView
+
+from user import views as UserViews
 
 urlpatterns = [
 
@@ -25,4 +28,9 @@ urlpatterns = [
     path('auth/token/refresh/',
          TokenRefreshView.as_view(),
          name='token_refresh'),
+
+    #? User
+    path('user/',
+         UserViews.UserListCreateAPIView.as_view(),
+         name='user-list-create'),
 ]
