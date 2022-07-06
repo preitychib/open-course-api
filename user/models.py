@@ -10,7 +10,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     profile_image = models.URLField(blank=True)
-    Bio = models.TextField(blank=True)
+    bio = models.TextField(blank=True)
     created_on = models.DateTimeField(default=timezone.now)
     is_admin = models.BooleanField(
         default=False,
