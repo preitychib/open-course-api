@@ -1,4 +1,3 @@
-from ast import And
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -28,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserCreateSerializer(serializers.ModelSerializer):
     '''
-        Serializer for User Creation with roles except admin
+        Serializer for User Creation/Register with roles except admin
     '''
     password = serializers.CharField(
         min_length=8,
