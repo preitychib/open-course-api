@@ -1,3 +1,4 @@
+from ast import And
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -27,14 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserCreateSerializer(serializers.ModelSerializer):
     '''
-        Serializer for User Creation
+        Serializer for User Creation with roles except admin
     '''
     password = serializers.CharField(
-        min_length=8,
-        max_length=16,
-        validators=[validate_password],
-    )
-    confirm_password = serializers.CharField(
         min_length=8,
         max_length=16,
         validators=[validate_password],
@@ -43,20 +39,21 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'profile_image',
             'name',
             'email',
-            'bio',
-            'is_admin',
             'is_teacher',
             'is_student',
             'password',
-            'confirm_password',
         ]
 
-    def validate(self, attrs):
-        if attrs['password'] != attrs['confirm_password']:
+    def validate(self, data):
+        """
+        Check that if user have one and only one role
+        """
+        if data['is_student'] == True and data['is_teacher'] == True:
             raise serializers.ValidationError(
-                {'error': 'Confirm Password does not match Password'})
-
-        return attrs
+                "User can not be  teacher and student at the same time.")
+        if data['is_student'] == False and data['is_teacher'] == False:
+            raise serializers.ValidationError(
+                "You have to select atleat one role")
+        return data

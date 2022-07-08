@@ -33,34 +33,30 @@ logger = logging.getLogger(__name__)
             ),
         },
         description='Create a new user.'),
-    get=extend_schema(
-        request=UserSerializer,
-        responses={
-            #? 200
-            status.HTTP_200_OK:
-            OpenApiResponse(
-                description='Users List',
-                response=UserSerializer,
-            ),
-            #? 400
-            status.HTTP_400_BAD_REQUEST:
-            OpenApiResponse(
-                description='Bad Request',
-                response=OpenApiTypes.OBJECT,
-            ),
-        },
-        description='Returns list of all Users.'),
+    request=UserSerializer,
+    responses={
+        #? 200
+        status.HTTP_200_OK:
+        OpenApiResponse(
+            description='Users List',
+            response=UserSerializer,
+        ),
+        #? 400
+        status.HTTP_400_BAD_REQUEST:
+        OpenApiResponse(
+            description='Bad Request',
+            response=OpenApiTypes.OBJECT,
+        ),
+    },
 )
-class UserListCreateAPIView(generics.ListCreateAPIView):
+class UserCreateAPIView(generics.CreateAPIView):
     '''
-        Allowed methods: GET, POST
-        GET: Returns list of all Users
+        Allowed methods: POST
         POST: Creates a new User
-        Accessible by: Admin
+       
     '''
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
 
     #? Create a new User
     def post(self, request, *args, **kwargs):
@@ -69,11 +65,8 @@ class UserListCreateAPIView(generics.ListCreateAPIView):
 
         try:
             User.objects.get_or_create(
-                profile_image=serializer.validated_data['profile_image'],
                 name=serializer.validated_data['name'],
                 email=serializer.validated_data['email'],
-                bio=serializer.validated_data['bio'],
-                is_admin=serializer.validated_data['is_admin'],
                 is_teacher=serializer.validated_data['is_teacher'],
                 is_student=serializer.validated_data['is_student'],
             )
