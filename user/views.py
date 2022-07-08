@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
                 response=OpenApiTypes.OBJECT,
             ),
         },
-        description='Create a new user.'),
+        description='Create a new user with teacher and student roles.'),
     request=UserSerializer,
     responses={
         #? 200
@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 class UserCreateAPIView(generics.CreateAPIView):
     '''
         Allowed methods: POST
-        POST: Creates a new User
+        POST: Creates a new User with teacher and student roles
        
     '''
     queryset = User.objects.all()

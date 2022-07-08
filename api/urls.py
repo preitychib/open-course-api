@@ -26,8 +26,6 @@ urlpatterns = [
          TokenObtainPairView.as_view(),
          name='token_obtain_pair'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # Todo:
-    # path('auth/signup',)
     path('auth/signup',
          UserViews.UserCreateAPIView.as_view(),
          name='user-sign-up'),
