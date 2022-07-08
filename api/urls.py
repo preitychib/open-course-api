@@ -1,4 +1,3 @@
-import imp
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -7,9 +6,13 @@ from rest_framework_simplejwt.views import (
 #? drf-spectacular
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView, SpectacularJSONAPIView
 
-from user import views as UserViews
-
 urlpatterns = [
+    path('auth/token/',
+         TokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('auth/token/refresh/',
+         TokenRefreshView.as_view(),
+         name='token_refresh'),
 
     #? Schema
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
@@ -20,13 +23,4 @@ urlpatterns = [
     path('schema/redoc/',
          SpectacularRedocView.as_view(url_name='schema'),
          name='redoc'),
-
-    # ? Authentication Token
-    path('auth/signin',
-         TokenObtainPairView.as_view(),
-         name='token_obtain_pair'),
-    path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('auth/signup',
-         UserViews.UserCreateAPIView.as_view(),
-         name='user-sign-up'),
 ]
