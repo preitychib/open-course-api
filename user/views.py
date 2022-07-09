@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 # Create your views here.
 import logging
 
@@ -18,29 +16,12 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 
-@extend_schema_view(
-    post=extend_schema(
-        request=UserCreateSerializer,
-        responses={
-            #? 201
-            status.HTTP_201_CREATED:
-            OpenApiResponse(description='User Created Successfully', ),
-            #? 400
-            status.HTTP_400_BAD_REQUEST:
-            OpenApiResponse(
-                description='Bad Request',
-                response=OpenApiTypes.OBJECT,
-            ),
-        },
-        description='Create a new user with teacher and student roles.'),
-    request=UserSerializer,
+@extend_schema_view(post=extend_schema(
+    request=UserCreateSerializer,
     responses={
-        #? 200
-        status.HTTP_200_OK:
-        OpenApiResponse(
-            description='Users List',
-            response=UserSerializer,
-        ),
+        #? 201
+        status.HTTP_201_CREATED:
+        OpenApiResponse(description='User Created Successfully', ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
         OpenApiResponse(
@@ -48,7 +29,7 @@ logger = logging.getLogger(__name__)
             response=OpenApiTypes.OBJECT,
         ),
     },
-)
+    description='Create a new user with teacher and student roles.'))
 class UserCreateAPIView(generics.CreateAPIView):
     '''
         Allowed methods: POST
