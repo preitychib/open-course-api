@@ -47,12 +47,18 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """
-        Check that if user have one and only one role
+        Serializer Valdidator
         """
-        if data['is_student'] == True and data['is_teacher'] == True:
-            raise serializers.ValidationError(
-                "User can not be  teacher and student at the same time.")
-        if data['is_student'] == False and data['is_teacher'] == False:
-            raise serializers.ValidationError(
-                "You have to select atleat one role")
+        #? To set Name's length 3 character
+        if len(data['name']) < 3:
+            raise serializers.ValidationError("Name length too short!")
+        if 'is_student' in data and 'is_teacher' in data:
+            #? To check if both teacher and student roles are not selected
+            if data['is_student'] == True and data['is_teacher'] == True:
+                raise serializers.ValidationError(
+                    "User can not be  teacher and student at the same time.")
+            #? To check if atleast one of the field is selected
+            if data['is_student'] == False and data['is_teacher'] == False:
+                raise serializers.ValidationError(
+                    "You have to select atleat one role")
         return data

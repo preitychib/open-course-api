@@ -56,7 +56,7 @@ class UserCreateAPIView(generics.CreateAPIView):
        
     '''
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserCreateSerializer
 
     #? Create a new User
     def post(self, request, *args, **kwargs):
@@ -64,11 +64,12 @@ class UserCreateAPIView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         try:
-            User.objects.get_or_create(
+            User.objects.create_user(
                 name=serializer.validated_data['name'],
                 email=serializer.validated_data['email'],
                 is_teacher=serializer.validated_data['is_teacher'],
                 is_student=serializer.validated_data['is_student'],
+                password=serializer.validated_data['password'],
             )
 
         except Exception as ex:
