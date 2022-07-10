@@ -28,4 +28,12 @@ urlpatterns = [
     path('auth/signup',
          UserViews.UserCreateAPIView.as_view(),
          name='user-sign-up'),
+
+    #? User
+    path('users/',
+         UserViews.UserListCreateAdminAPIView.as_view(),
+         name='user-create-admin'),
+    path('users/',
+         UserViews.UserListCreateAdminAPIView.as_view(),
+         name='user-get-all-admin'),
 ]
