@@ -96,7 +96,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class UserCreateAdminSerializer(serializers.ModelSerializer):
     '''
-        Serializer for User Creation/Register with roles except admin
+        Serializer for User Creation and Update
     '''
 
     password = serializers.CharField(
@@ -148,6 +148,52 @@ class UserCreateAdminSerializer(serializers.ModelSerializer):
 
         #? To set Name's length 3 character
         if len(data['name']) < 3:
+            raise serializers.ValidationError("Name length too short!")
+
+        if 'is_student' in data and 'is_teacher' in data and 'is_admin' in data:
+
+            #? To check if both teacher and student roles are not selected
+            if (data['is_student'] == True and data['is_teacher'] == True and [
+                    'is_admin' == True
+            ]) or (data['is_admin'] == True and data['is_teacher']
+                   == True) or (data['is_student'] == True and data['is_admin']
+                                == True) or (data['is_student'] == True
+                                             and data['is_teacher'] == True):
+                raise serializers.ValidationError(
+                    "User can not have multiple roles")
+
+            #? To check if atleast one of the field is selected
+            if data['is_admin'] == False and data[
+                    'is_student'] == False and data['is_teacher'] == False:
+                raise serializers.ValidationError(
+                    "You have to select atleat one role")
+
+        return data
+
+
+class UserUpdateAdminSerializer(serializers.ModelSerializer):
+    '''
+        Serializer for User Updation
+    '''
+
+    class Meta:
+        model = User
+        fields = [
+            'name',
+            'email',
+            'bio',
+            'is_admin',
+            'is_teacher',
+            'is_student',
+        ]
+
+    def validate(self, data):
+        """
+        Serializer Valdidator
+        """
+
+        #? To set Name's length 3 character
+        if 'is_name' in data and len(data['name']) < 3:
             raise serializers.ValidationError("Name length too short!")
 
         if 'is_student' in data and 'is_teacher' in data and 'is_admin' in data:

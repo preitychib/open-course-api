@@ -32,8 +32,8 @@ urlpatterns = [
     #? User
     path('users/',
          UserViews.UserListCreateAdminAPIView.as_view(),
-         name='user-create-admin'),
-    path('users/',
-         UserViews.UserListCreateAdminAPIView.as_view(),
-         name='user-get-all-admin'),
+         name='user-create-list-admin'),
+    path('users/<int:pk>/',
+         UserViews.UserRetrieveUpdateDestroyAdminAPIView.as_view(),
+         name='user-retrieve-update-destroy'),
 ]

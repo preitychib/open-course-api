@@ -8,13 +8,11 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-
-from .serializers import UserCreateAdminSerializer, UserSerializer, UserCreateSerializer
 from .permissions import UserIsAdmin
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import UserSerializer, UserCreateSerializer, UserCreateAdminSerializer
+from .serializers import UserSerializer, UserCreateSerializer, UserCreateAdminSerializer, UserUpdateAdminSerializer
 from .permissions import UserIsAdmin
 
 from api.paginator import StandardPagination
@@ -145,3 +143,115 @@ class UserListCreateAdminAPIView(generics.ListCreateAPIView):
         logger.info(response)
 
         return Response(response, status=status.HTTP_201_CREATED)
+
+
+@extend_schema_view(
+    get=extend_schema(
+        description=
+        'Returns Single User registered on Application of given Id.\n\nargs: pk',
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(
+                description='User Details',
+                response=UserSerializer,
+            ),
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='Not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        }),
+    patch=extend_schema(
+        request=UserUpdateAdminSerializer,
+        description=
+        'Updates the User of given Id with the provided Data.\n\nargs: pk',
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(description='User Updated Successfully', ),
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='Not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        }),
+    delete=extend_schema(
+        description='Deletes the User of the given Id.\n\nargs: pk',
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(description='User Deleted Successfully', ),
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='Not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        }),
+)
+class UserRetrieveUpdateDestroyAdminAPIView(generics.GenericAPIView):
+    '''
+        Allowed methods: GET, PATCH, DELETE
+        GET: Return User of given Id
+        PATCH: Update User of given Id with Validated data provided
+        DELETE: Delete User of given Id
+        Note: Updatation on User is done via Partial Update method
+        args: pk
+        
+        Accessible by: Admin
+    '''
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
+    lookup_field = 'pk'
+
+    #? get single User
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    #? Update User of given Id
+    def patch(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = UserUpdateAdminSerializer(user,
+                                               data=request.data,
+                                               partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        response = {'detail': 'User Updated Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_200_OK)
+
+    #? Delete User of given Id
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        user.delete()
+
+        response = {'detail': 'User Deleted Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_200_OK)
