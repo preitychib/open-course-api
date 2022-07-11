@@ -14,6 +14,8 @@ from pathlib import Path
 from environs import Env
 import dj_database_url
 import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 env = Env()
 env.read_env()
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     #? Custom apps
     'api',
     'user',
+    'image_upload',
 ]
 
 MIDDLEWARE = [
