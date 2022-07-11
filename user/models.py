@@ -4,12 +4,14 @@ from django.contrib.auth.models import PermissionsMixin
 from django.utils import timezone
 from .managers import UserManager
 
+
 class UserModel(AbstractBaseUser, PermissionsMixin):
     """Model definition for UserModel."""
     username = None
     name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    profile_image = models.URLField(blank=True)
+    profile_image = models.URLField(blank=True, null=True)
+    profile_image_public_id = models.TextField(blank=True, null=True)
     bio = models.TextField(blank=True)
     created_on = models.DateTimeField(default=timezone.now)
     is_admin = models.BooleanField(
@@ -28,7 +30,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
         default=False,
         help_text='Is the Person Student or not',
     )
-    objects= UserManager()
+    objects = UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
