@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from environs import Env
 import dj_database_url
+import cloudinary
 
 env = Env()
 env.read_env()
@@ -46,9 +47,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_spectacular',
     'drf_spectacular_sidecar',
+    'cloudinary',
+
     #? Custom apps
     'api',
-    'user'
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -414,3 +417,14 @@ LOGGING = {
         },
     },
 }
+
+#? max request size check
+DATA_UPLOAD_MAX_MEMORY_SIZE = None
+
+#? Cloudinary Config
+cloudinary.config(
+    cloud_name=env.str('CLOUDINARY_CLOUD_NAME'),
+    api_key=env.str('CLOUDINARY_API_KEY'),
+    api_secret=env.str('CLOUDINARY_API_SECRET'),
+    secure=True,
+)
