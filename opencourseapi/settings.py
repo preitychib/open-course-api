@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'api',
     'user',
     'image_upload',
+    'course',
 ]
 
 MIDDLEWARE = [
