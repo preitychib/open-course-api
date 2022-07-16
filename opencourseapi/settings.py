@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'course',
     'course_section',
     'course_video',
+    'category',
 ]
 
 MIDDLEWARE = [
