@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'user',
     'image_upload',
     'course',
+    'course_section',
+    'course_video',
 ]
 
 MIDDLEWARE = [
