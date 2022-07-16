@@ -8,6 +8,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 
 from user import views as UserViews
 
+from image_upload import views as ImageUploadViews
+
 urlpatterns = [
 
     #? Schema
@@ -28,4 +30,17 @@ urlpatterns = [
     path('auth/signup',
          UserViews.UserCreateAPIView.as_view(),
          name='user-sign-up'),
+
+    #? User
+    path('users/',
+         UserViews.UserListCreateAdminAPIView.as_view(),
+         name='user-create-list-admin'),
+    path('users/<int:pk>/',
+         UserViews.UserRetrieveUpdateDestroyAdminAPIView.as_view(),
+         name='user-retrieve-update-destroy'),
+
+    #? Image Upload
+    path('image-upload/',
+         ImageUploadViews.ImageUploadAPIView.as_view(),
+         name='image-upload'),
 ]
