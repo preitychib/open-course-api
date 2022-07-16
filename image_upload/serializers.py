@@ -15,7 +15,7 @@ class ImageUploadSerializer(serializers.Serializer):
     def validate_image(self, value):
         '''
             Validations for image
-
+            
             Validates if its Empty
             Validates if its a valid image
             Validates if its of a valid size
