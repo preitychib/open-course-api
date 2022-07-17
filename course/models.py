@@ -1,4 +1,3 @@
-from unicodedata import category
 from django.utils import timezone
 from django.db import models
 from category.models import CategoryModel
@@ -17,6 +16,8 @@ class CourseModel(models.Model):
     created_on = models.DateTimeField(default=timezone.now)
     published_on = models.DateTimeField()
     course_status = models.CharField(choices=COURSE_STATUS, max_length=14)
+    total_videos = models.IntegerField()
+    total_duration = models.IntegerField()
     #? Many to one realtion with Category Model
     category = models.ForeignKey(
         CategoryModel,

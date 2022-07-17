@@ -1,17 +1,20 @@
 from django.db import models
 from course_section.models import CourseSectionModel
 
+
 class CourseVideo(models.Model):
     """Model definition for CourseVideo."""
 
     video_title = models.TextField()
     description = models.TextField()
-    #? Many to one relation with Course Section Model
-    section = models.ForeignKey(CourseSectionModel, on_delete=models.CASCADE)
     video_link = models.URLField(blank=True, null=True)
     video_link_public_id = models.TextField(blank=True, null=True)
-   
-    # TODO: Duration field?
+    duration = models.IntegerField()
+    #? Many to one relation with Course Section Model
+    section = models.ForeignKey(
+        CourseSectionModel,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         """Meta definition for CourseVideo."""
