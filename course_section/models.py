@@ -7,7 +7,10 @@ class CourseSectionModel(models.Model):
     section_tittle = models.TextField()
     description = models.TextField()
     #? Many to one realtion with couse model
-    course = models.ForeignKey(CourseModel, on_delete=models.CASCADE)
+    course = models.ForeignKey(
+        CourseModel,
+        on_delete=models.CASCADE,
+    )
 
     # TODO: max and min length
 
