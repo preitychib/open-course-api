@@ -1,16 +1,20 @@
+from tkinter import CASCADE
 from django.db import models
+from category.models import CategoryModel
+from course_section.models import CourseSectionModel
 
 
 class CourseVideo(models.Model):
     """Model definition for CourseVideo."""
 
     video_title = models.TextField()
-    #description=models.TextField()
-    # section= 1:n
+    description = models.TextField()
+    #? Many to one relation with Course Section Model
+    section = models.ForeignKey(CourseSectionModel, on_delete=models.CASCADE)
     video_link = models.URLField(blank=True, null=True)
     video_link_public_id = models.TextField(blank=True, null=True)
 
-    # TODO: Define fields here
+    # TODO: Duration field?
 
     class Meta:
         """Meta definition for CourseVideo."""
@@ -20,4 +24,4 @@ class CourseVideo(models.Model):
 
     def __str__(self):
         """Unicode representation of CourseVideo."""
-        pass
+        return self.video_title
