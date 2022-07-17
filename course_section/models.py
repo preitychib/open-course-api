@@ -1,14 +1,15 @@
 from django.db import models
+from course.models import CourseModel
 
 
 class CourseSectionModel(models.Model):
     """Model definition for CourseSectionModel."""
     section_tittle = models.TextField()
-    
-    # description = models.TextField() / json?
-    # course=models 1:n
+    description = models.TextField()
+    # Many to one realtion with couse model
+    course = models.ForeignKey(CourseModel, on_delete=models.CASCADE)
 
-    # TODO: Define realion fields here
+    # TODO: max and min length
 
     class Meta:
         """Meta definition for CourseSectionModel."""
