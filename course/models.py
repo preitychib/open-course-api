@@ -1,5 +1,8 @@
+from unicodedata import category
 from django.utils import timezone
 from django.db import models
+from category.models import CategoryModel
+from user.models import UserModel
 
 
 class CourseModel(models.Model):
@@ -9,12 +12,22 @@ class CourseModel(models.Model):
         ('not-approved', 'not-approved'),
         ('drafted', 'drafted'),
     )
+
     course_name = models.TextField()
     created_on = models.DateTimeField(default=timezone.now)
     published_on = models.DateTimeField()
     course_status = models.CharField(choices=COURSE_STATUS, max_length=14)
-
-    # Todo: Add relation fields
+    #? Many to one realtion with Category Model
+    category = models.ForeignKey(
+        CategoryModel,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    #? Many to one relation with User Model
+    teacher = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         """Meta definition for CourseModel."""

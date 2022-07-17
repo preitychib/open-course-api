@@ -1,8 +1,5 @@
-from tkinter import CASCADE
 from django.db import models
-from category.models import CategoryModel
 from course_section.models import CourseSectionModel
-
 
 class CourseVideo(models.Model):
     """Model definition for CourseVideo."""
@@ -13,7 +10,7 @@ class CourseVideo(models.Model):
     section = models.ForeignKey(CourseSectionModel, on_delete=models.CASCADE)
     video_link = models.URLField(blank=True, null=True)
     video_link_public_id = models.TextField(blank=True, null=True)
-
+   
     # TODO: Duration field?
 
     class Meta:
