@@ -1,5 +1,3 @@
-from nis import cat
-from unicodedata import category
 from django.db import models
 
 
