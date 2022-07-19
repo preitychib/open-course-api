@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from .validators import password_validator
-#from user.models import UserModel
+from .validators import password_validator, role_validaotr
 
 User = get_user_model()
 
@@ -51,8 +50,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         Serializer Valdidator
         """
 
-        
-
         if 'is_student' in data and 'is_teacher' in data:
 
             #? To check if both teacher and student roles are not selected
@@ -98,22 +95,8 @@ class UserCreateAdminSerializer(serializers.ModelSerializer):
         """
 
         if 'is_student' in data and 'is_teacher' in data and 'is_admin' in data:
-
-            #? To check if both teacher and student roles are not selected
-            if (data['is_student'] == True and data['is_teacher'] == True and [
-                    'is_admin' == True
-            ]) or (data['is_admin'] == True and data['is_teacher']
-                   == True) or (data['is_student'] == True and data['is_admin']
-                                == True) or (data['is_student'] == True
-                                             and data['is_teacher'] == True):
-                raise serializers.ValidationError(
-                    "User can not have multiple roles")
-
-            #? To check if atleast one of the field is selected
-            if data['is_admin'] == False and data[
-                    'is_student'] == False and data['is_teacher'] == False:
-                raise serializers.ValidationError(
-                    "You have to select atleat one role")
+            role_validaotr(data['is_admin'], data['is_teacher'],
+                           data['is_student'])
 
         return data
 
@@ -141,21 +124,7 @@ class UserUpdateAdminSerializer(serializers.ModelSerializer):
         """
 
         if 'is_student' in data and 'is_teacher' in data and 'is_admin' in data:
-
-            #? To check if both teacher and student roles are not selected
-            if (data['is_student'] == True and data['is_teacher'] == True and [
-                    'is_admin' == True
-            ]) or (data['is_admin'] == True and data['is_teacher']
-                   == True) or (data['is_student'] == True and data['is_admin']
-                                == True) or (data['is_student'] == True
-                                             and data['is_teacher'] == True):
-                raise serializers.ValidationError(
-                    "User can not have multiple roles")
-
-            #? To check if atleast one of the field is selected
-            if data['is_admin'] == False and data[
-                    'is_student'] == False and data['is_teacher'] == False:
-                raise serializers.ValidationError(
-                    "You have to select atleat one role")
+            role_validaotr(data['is_admin'], data['is_teacher'],
+                           data['is_student'])
 
         return data

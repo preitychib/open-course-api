@@ -25,3 +25,16 @@ def password_validator(value):
 
     return value
 
+
+def role_validaotr(is_admin, is_teacher, is_student):
+    #? To check if both teacher and student roles are not selected
+    if (is_student == True and is_teacher == True and is_admin == True) or (
+            is_admin == True
+            and is_teacher == True) or (is_student == True and is_admin
+                                        == True) or (is_student == True
+                                                     and is_teacher == True):
+        raise serializers.ValidationError("User can not have multiple roles")
+
+    #? To check if atleast one of the field is selected
+    if is_admin == False and is_student == False and is_teacher == False:
+        raise serializers.ValidationError("You have to select atleat one role")
