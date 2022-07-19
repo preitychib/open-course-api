@@ -1,4 +1,5 @@
 # OPEN COURSE WARE
+  ![OpenCourseWareLogo](/home/preity/pictures/wallpapers/blues.jpg)
   Welcome to Open Course Ware API repo. Let's take plunge 🏊‍♀️ into this Readme File real quick.
 
 ## GETTING STARTED 🌊
