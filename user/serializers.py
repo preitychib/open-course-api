@@ -1,3 +1,6 @@
+from wsgiref import validate
+from wsgiref.validate import validator
+from xml.dom import ValidationErr
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
@@ -127,4 +130,29 @@ class UserUpdateAdminSerializer(serializers.ModelSerializer):
             role_validaotr(data['is_admin'], data['is_teacher'],
                            data['is_student'])
 
+        return data
+
+
+class UserUpdatePasswordAdminSerializer(serializers.Serializer):
+    '''
+        Serializer for password updation
+    '''
+
+    password = serializers.CharField(
+        min_length=3,
+        max_length=30,
+        validators=[validate_password, password_validator],
+    )
+    confirm_password = serializers.CharField(
+        min_length=3,
+        max_length=30,
+        validators=[validate_password, password_validator],
+    )
+
+    def validate(self, data):
+        '''
+            Check if confirm password and password are same or not
+        '''
+        if (data['password'] != data['confirm_password']):
+            raise serializers.ValidationError("Password doesn't match.")
         return data

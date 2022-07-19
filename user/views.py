@@ -12,7 +12,7 @@ from .permissions import UserIsAdmin
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import UserSerializer, UserCreateSerializer, UserCreateAdminSerializer, UserUpdateAdminSerializer
+from .serializers import UserSerializer, UserCreateSerializer, UserCreateAdminSerializer, UserUpdateAdminSerializer, UserUpdatePasswordAdminSerializer
 from .permissions import UserIsAdmin
 
 from api.paginator import StandardPagination
@@ -252,6 +252,56 @@ class UserRetrieveUpdateDestroyAdminAPIView(generics.GenericAPIView):
         user.delete()
 
         response = {'detail': 'User Deleted Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_200_OK)
+
+
+@extend_schema_view(
+    post=extend_schema(
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(
+                description='User Password Updated Successfully', ),
+
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='User not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        },
+        operation_id='user_password_update'), )
+class UserPasswordUpdateAdminAPIView(generics.GenericAPIView):
+    '''
+        Updates the Password of User of given Id.
+
+        Accessible by: Admin
+    '''
+    queryset = User.objects.all()
+    serializer_class = UserUpdatePasswordAdminSerializer
+    permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
+    lookup_field = 'pk'
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # find user by id and return 404 if not found
+        user = self.get_object()
+
+        user.set_password(serializer.validated_data['password'])
+        user.save()
+
+        response = {'detail': 'Password Updated Successfully'}
         logger.info(response)
 
         return Response(response, status=status.HTTP_200_OK)
