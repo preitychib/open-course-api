@@ -1,6 +1,3 @@
-from wsgiref import validate
-from wsgiref.validate import validator
-from xml.dom import ValidationErr
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
