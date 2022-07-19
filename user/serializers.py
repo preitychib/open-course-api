@@ -1,9 +1,8 @@
-from urllib.request import DataHandler
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-
-from user.models import UserModel
+from .validators import password_validator
+#from user.models import UserModel
 
 User = get_user_model()
 
@@ -32,9 +31,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(
         min_length=8,
-        max_length=16,
-        validators=[validate_password],
+        max_length=30,
+        validators=[validate_password, password_validator],
     )
+    name = serializers.CharField(min_length=3)
 
     class Meta:
         model = User
@@ -46,38 +46,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
             'password',
         ]
 
-    def validate_password(self, value):
-
-        #? check if password contain atleast one digit
-        if not any(char.isdigit() for char in value):
-            raise serializers.ValidationError(
-                'Password must contain at least 1 digit.')
-
-        #? check if password contains atleast 1 special character
-        if not any(char in '!@#$%^&*()_+' for char in value):
-            raise serializers.ValidationError(
-                'Password must contain at least one special character')
-
-        #? check if password contains atleast 1 capital letter
-        if not any(char.isupper() for char in value):
-            raise serializers.ValidationError(
-                'Password must contain at least one capital letter')
-
-        #? check if password contains atleast 1 small letter
-        if not any(char.islower() for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one small letter")
-
-        return value
-
     def validate(self, data):
         """
         Serializer Valdidator
         """
 
-        #? To set Name's length 3 character
-        if len(data['name']) < 3:
-            raise serializers.ValidationError("Name length too short!")
+        
 
         if 'is_student' in data and 'is_teacher' in data:
 
@@ -102,8 +76,9 @@ class UserCreateAdminSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         min_length=8,
         max_length=16,
-        validators=[validate_password],
+        validators=[validate_password, password_validator],
     )
+    name = serializers.CharField(min_length=3)
 
     class Meta:
         model = User
@@ -117,38 +92,10 @@ class UserCreateAdminSerializer(serializers.ModelSerializer):
             'password',
         ]
 
-    def validate_password(self, value):
-
-        #? check if password contain atleast one digit
-        if not any(char.isdigit() for char in value):
-            raise serializers.ValidationError(
-                'Password must contain at least 1 digit.')
-
-        #? check if password contains atleast 1 special character
-        if not any(char in '!@#$%^&*()_+' for char in value):
-            raise serializers.ValidationError(
-                'Password must contain at least one special character')
-
-        #? check if password contains atleast 1 capital letter
-        if not any(char.isupper() for char in value):
-            raise serializers.ValidationError(
-                'Password must contain at least one capital letter')
-
-        #? check if password contains atleast 1 small letter
-        if not any(char.islower() for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one small letter")
-
-        return value
-
     def validate(self, data):
         """
         Serializer Valdidator
         """
-
-        #? To set Name's length 3 character
-        if len(data['name']) < 3:
-            raise serializers.ValidationError("Name length too short!")
 
         if 'is_student' in data and 'is_teacher' in data and 'is_admin' in data:
 
@@ -175,6 +122,7 @@ class UserUpdateAdminSerializer(serializers.ModelSerializer):
     '''
         Serializer for User Updation
     '''
+    name = serializers.CharField(min_length=3)
 
     class Meta:
         model = User
@@ -191,10 +139,6 @@ class UserUpdateAdminSerializer(serializers.ModelSerializer):
         """
         Serializer Valdidator
         """
-
-        #? To set Name's length 3 character
-        if 'is_name' in data and len(data['name']) < 3:
-            raise serializers.ValidationError("Name length too short!")
 
         if 'is_student' in data and 'is_teacher' in data and 'is_admin' in data:
 
