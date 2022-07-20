@@ -356,12 +356,11 @@ class UserPasswordUpdateAdminAPIView(generics.GenericAPIView):
 class UserRetrieveUpdateAPIView(generics.GenericAPIView):
     '''
         Allowed methods: GET, PATCH
-        GET: Return User of given Id
-        PATCH: Update User of given Id with Validated data provided
+        GET: Return Logged in user data
+        PATCH: Update Logged User data with Validated data provided
         Note: Updatation on User is done via Partial Update method
-        args: pk
         
-        Accessible by: 
+        Accessible by: Authenticated users 
     '''
 
     queryset = User.objects.all()
