@@ -36,9 +36,14 @@ urlpatterns = [
          UserViews.UserListCreateAdminAPIView.as_view(),
          name='user-create-list-admin'),
     path('users/<int:pk>/',
-         UserViews.UserRetrieveUpdateDestroyAdminAPIView.as_view(),
-         name='user-retrieve-update-destroy'),
-
+         UserViews.UserRetrieveUpdateAdminAPIView.as_view(),
+         name='user-retrieve-update'),
+    path('users/delete/<int:pk>/',
+         UserViews.UserDestroyAdminAPIView.as_view(),
+         name='user-delete-admin'),
+    path('users/current-user/',
+         UserViews.UserRetrieveUpdateAPIView.as_view(),
+         name='user-retrieve-update'),
     #? Image Upload
     path('image-upload/',
          ImageUploadViews.ImageUploadAPIView.as_view(),
