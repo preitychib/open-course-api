@@ -87,6 +87,8 @@ class UserCreateAdminSerializer(serializers.ModelSerializer):
             'is_teacher',
             'is_student',
             'password',
+            'profile_image',
+            'profile_image_public_id',
         ]
 
     def validate(self, data):
@@ -113,6 +115,8 @@ class UserUpdateAdminSerializer(serializers.ModelSerializer):
             'name',
             'email',
             'bio',
+            'profile_image',
+            'profile_image_public_id',
             'is_admin',
             'is_teacher',
             'is_student',
