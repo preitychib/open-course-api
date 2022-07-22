@@ -12,6 +12,8 @@ from image_upload import views as ImageUploadViews
 
 from video_upload import views as VideoUploadViews
 
+from category import views as CategoryViews
+
 urlpatterns = [
 
     #? Schema
@@ -45,9 +47,14 @@ urlpatterns = [
     path('image-upload/',
          ImageUploadViews.ImageUploadAPIView.as_view(),
          name='image-upload'),
-         
+
     #? Video Upload
     path('video-upload/',
          VideoUploadViews.VideoUploadAPIView.as_view(),
          name='video-upload'),
+
+    #? Category
+    path('category/',
+         CategoryViews.CategoryCreateAPIView.as_view(),
+         name='category-create')
 ]
