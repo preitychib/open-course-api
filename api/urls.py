@@ -56,5 +56,8 @@ urlpatterns = [
     #? Category
     path('category/',
          CategoryViews.CategoryCreateAPIView.as_view(),
-         name='category-create')
+         name='category-create'),
+    path('category/<int:pk>/',
+         CategoryViews.CategoryUpdateDeleteAPIView.as_view(),
+         name='category-update-delete'),
 ]
