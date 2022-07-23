@@ -62,12 +62,15 @@ class CategoryCreateAPIView(generics.CreateAPIView):
         return Response(response, status=status.HTTP_201_CREATED)
 
 
-@extend_schema_view(post=extend_schema(
+@extend_schema_view(get=extend_schema(
     request=CatergorySerializer,
     responses={
-        #? 201
-        status.HTTP_201_CREATED:
-        OpenApiResponse(description='Category Created Successfully', ),
+        #? 200
+        status.HTTP_200_OK:
+        OpenApiResponse(
+            description='Categories List',
+            response=CatergorySerializer,
+        ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
         OpenApiResponse(
@@ -75,34 +78,20 @@ class CategoryCreateAPIView(generics.CreateAPIView):
             response=OpenApiTypes.OBJECT,
         ),
     },
-    description='Creates a new category.'))
-class CategoryCreateAPIView(generics.CreateAPIView):
+))
+class CategoryListAPIView(generics.ListAPIView):
     '''
-        Allowed methods: POST
-        POST: Creates a Category 
-        Access: Admin
+        Allowed methods: GET
+       GET: Category List
+    
        
     '''
     queryset = CategoryModel.objects.all()
     serializer_class = CatergorySerializer
-    permission_classes = [permissions.IsAuthenticated & UserIsAdmin]
-
-    #? Create a new User
-    def post(self, request, *args, **kwargs):
-        serializer = CatergorySerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            serializer.save()
-        except Exception as ex:
-            logger.error(str(ex))
-
-            return Response({'detail': str(ex)},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        response = {'detail': 'Category Created Successfully'}
-        logger.info(response)
-
-        return Response(response, status=status.HTTP_201_CREATED)
+    pagination_class = StandardPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = 'created_on'
+    ordering = '-created_on'
 
 
 @extend_schema_view(patch=extend_schema(

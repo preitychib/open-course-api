@@ -60,4 +60,7 @@ urlpatterns = [
     path('category/<int:pk>/',
          CategoryViews.CategoryUpdateDeleteAPIView.as_view(),
          name='category-update-delete'),
+    path('category/',
+         CategoryViews.CategoryListAPIView.as_view(),
+         name='category-list'),
 ]
