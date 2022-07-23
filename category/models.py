@@ -1,10 +1,12 @@
 from django.db import models
+from django.utils import timezone
 
 
 class CategoryModel(models.Model):
     """Model definition for CategoryModel."""
 
     category_name = models.TextField()
+    created_on = models.DateTimeField(default=timezone.now)
 
     class Meta:
         """Meta definition for CategoryModel."""

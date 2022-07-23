@@ -10,4 +10,6 @@ class CatergorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CategoryModel
-        fields = '__all__'
+        exclude = [
+            'created_on',
+        ]
