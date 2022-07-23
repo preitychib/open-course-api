@@ -1,5 +1,6 @@
 from django.db import models
 from course_section.models import CourseSectionModel
+from django.utils import timezone
 
 
 class CourseVideo(models.Model):
@@ -10,6 +11,7 @@ class CourseVideo(models.Model):
     video_link = models.URLField(blank=True, null=True)
     video_link_public_id = models.TextField(blank=True, null=True)
     duration = models.IntegerField()
+    created_on = models.DateTimeField(default=timezone.now)
     #? Many to one relation with Course Section Model
     section = models.ForeignKey(
         CourseSectionModel,
