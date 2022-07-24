@@ -71,6 +71,17 @@ urlpatterns = [
          CategoryViews.CategoryListAPIView.as_view(),
          name='category-list'),
 
+    #? Course
+    path('course/',
+         CourseViews.CourseCreateAPIView.as_view(),
+         name='course-create'),
+    path('course/<int:pk>/',
+         CourseViews.CourseUpdateDeleteAPIView.as_view(),
+         name='course-update-delete'),
+    path('course/all/',
+         CourseViews.CourseListAPIView.as_view(),
+         name='course-list'),
+
     #? Course Section
     path('course-section/',
          CourseSectionViews.CourseSectionCreateAPIView.as_view(),
