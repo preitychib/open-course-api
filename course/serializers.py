@@ -20,7 +20,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CourseModel
-        exclude = {
+        exclude = [
             'created_on',
-        }
+        ]
         
