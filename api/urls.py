@@ -88,5 +88,8 @@ urlpatterns = [
          name='course-video-create'),
     path('course-video/all/',
          CourseVideoViews.CourseVideoListAPIView.as_view(),
-         name='course-video-list')
+         name='course-video-list'),
+    path('course-video/<int:pk>/',
+         CourseVideoViews.CourseVideoUpdateDeleteAPIView.as_view(),
+         name='course-video-update-delete'),
 ]

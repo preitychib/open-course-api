@@ -107,9 +107,7 @@ class CourseSectionListAPIView(generics.ListAPIView):
             response=OpenApiTypes.OBJECT,
         ),
     },
-    description=
-    ' Allowed methods: Patch\nPOST: Creates a Category\nAccess: Admin, Teacher'
-))
+    description=' Updates a Course Video\nAccess: Admin, Teacher'))
 @extend_schema_view(delete=extend_schema(
     responses={
         #? 201
