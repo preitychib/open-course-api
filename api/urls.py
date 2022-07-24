@@ -69,6 +69,8 @@ urlpatterns = [
     #? Course Video
     path('course-video/',
          CourseVideoViews.CourseVideoCreateAPIView.as_view(),
-         name='course-video-create')
-         
+         name='course-video-create'),
+    path('course-video/all/',
+         CourseVideoViews.CourseVideoListAPIView.as_view(),
+         name='course-video-list')
 ]

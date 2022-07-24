@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CatergorySerializer
+from .serializers import CatergoryFullSerializer, CatergorySerializer
 from .models import CategoryModel
 from user.permissions import UserIsAdmin, UserIsTeacher
 from api.paginator import StandardPagination
@@ -60,13 +60,13 @@ class CategoryCreateAPIView(generics.CreateAPIView):
 
 
 @extend_schema_view(get=extend_schema(
-    request=CatergorySerializer,
+    request=CatergoryFullSerializer,
     responses={
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
             description='Categories List',
-            response=CatergorySerializer,
+            response=CatergoryFullSerializer,
         ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
@@ -84,7 +84,7 @@ class CategoryListAPIView(generics.ListAPIView):
        
     '''
     queryset = CategoryModel.objects.all()
-    serializer_class = CatergorySerializer
+    serializer_class = CatergoryFullSerializer
     pagination_class = StandardPagination
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
