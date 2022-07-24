@@ -1,3 +1,4 @@
+import imp
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -14,7 +15,11 @@ from video_upload import views as VideoUploadViews
 
 from category import views as CategoryViews
 
+from course import views as CourseViews
+
 from course_video import views as CourseVideoViews
+
+from course_section import views as CourseSectionViews
 
 urlpatterns = [
 
@@ -65,6 +70,17 @@ urlpatterns = [
     path('category/all/',
          CategoryViews.CategoryListAPIView.as_view(),
          name='category-list'),
+
+    #? Course Section
+    path('course-section/',
+         CourseSectionViews.CourseSectionCreateAPIView.as_view(),
+         name='course-section-create'),
+    path('course-section/<int:pk>/',
+         CourseSectionViews.CourseSectionUpdateDeleteAPIView.as_view(),
+         name='course-section-update-delete'),
+    path('course-section/all/',
+         CourseSectionViews.CourseSectionListAPIView.as_view(),
+         name='course-section-list'),
 
     #? Course Video
     path('course-video/',

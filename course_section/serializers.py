@@ -3,8 +3,6 @@ from .models import CourseSectionModel
 
 
 class CourseSectionFullSerializer(serializers.ModelSerializer):
-    video_link = serializers.URLField()
-    video_link_public_id = serializers.CharField()
 
     class Meta:
         model = CourseSectionModel
@@ -12,8 +10,6 @@ class CourseSectionFullSerializer(serializers.ModelSerializer):
 
 
 class CourseSectionSerializer(serializers.ModelSerializer):
-    video_link = serializers.URLField()
-    video_link_public_id = serializers.CharField()
 
     class Meta:
         model = CourseSectionModel
