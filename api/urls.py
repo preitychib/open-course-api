@@ -14,6 +14,8 @@ from video_upload import views as VideoUploadViews
 
 from category import views as CategoryViews
 
+from course_video import views as CourseVideoViews
+
 urlpatterns = [
 
     #? Schema
@@ -63,4 +65,10 @@ urlpatterns = [
     path('category/all/',
          CategoryViews.CategoryListAPIView.as_view(),
          name='category-list'),
+
+    #? Course Video
+    path('course-video/',
+         CourseVideoViews.CourseVideoCreateAPIView.as_view(),
+         name='course-video-create')
+         
 ]

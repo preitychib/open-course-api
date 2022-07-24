@@ -1,7 +1,4 @@
-from functools import partial
 import logging
-from unicodedata import category
-from unittest.mock import patch
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
@@ -44,7 +41,7 @@ class CategoryCreateAPIView(generics.CreateAPIView):
     serializer_class = CatergorySerializer
     permission_classes = [permissions.IsAuthenticated & UserIsAdmin]
 
-    #? Create a new User
+    #? Create a new Category
     def post(self, request, *args, **kwargs):
         serializer = CatergorySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
