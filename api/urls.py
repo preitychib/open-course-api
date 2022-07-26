@@ -1,4 +1,3 @@
-
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -83,10 +82,13 @@ urlpatterns = [
          name='course-create'),
     path('course/<int:pk>/',
          CourseViews.CourseUpdateDeleteAPIView.as_view(),
-         name='course-update-delete'),
+         name='course-retrive-update-delete'),
     path('course/all/',
          CourseViews.CourseListAPIView.as_view(),
          name='course-list'),
+    path('course/change-status/<int:pk>/',
+         CourseViews.CourseStatusUpdateAPIView.as_view(),
+         name='course-change-status'),
 
     #? Course Section
     path('course-section/',

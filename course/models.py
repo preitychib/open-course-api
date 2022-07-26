@@ -7,8 +7,8 @@ from user.models import UserModel
 class CourseModel(models.Model):
     """Model definition for CourseModel."""
     COURSE_STATUS = (
-        ('approved', 'approved'),
-        ('not-approved', 'not-approved'),
+        ('published', 'published'),
+        ('requested', 'requested'),
         ('drafted', 'drafted'),
     )
 

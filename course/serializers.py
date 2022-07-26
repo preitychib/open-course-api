@@ -5,7 +5,7 @@ from .models import CourseModel
 
 class CourseFullSerializer(serializers.ModelSerializer):
     '''
-        full Serializer for course
+        Full Serializer for course
     '''
 
     class Meta:
@@ -15,7 +15,7 @@ class CourseFullSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     '''
-            course Serializer
+        Course Serializer
     '''
 
     class Meta:
@@ -26,8 +26,28 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class CourseNestedSerializer(serializers.ModelSerializer):
+    '''
+        Course Serializer to get Nested data 
+    '''
     section = CourseSectionNestedSerializer(many=True)
 
     class Meta:
         model = CourseModel
         fields = '__all__'
+
+
+class CourseStatusSerializer(serializers.ModelSerializer):
+    '''
+        Course's status serializer
+    '''
+    course_status = serializers.CharField(max_length=12)
+
+    class Meta:
+        model = CourseModel
+        fields = [
+            'course_status',
+        ]
+
+    # def validated_course_status(self, value):
+
+    #     return value

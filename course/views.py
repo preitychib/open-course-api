@@ -1,3 +1,4 @@
+from functools import partial
 import logging
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
@@ -8,7 +9,7 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CourseFullSerializer, CourseNestedSerializer, CourseSerializer
+from .serializers import CourseFullSerializer, CourseNestedSerializer, CourseSerializer, CourseStatusSerializer
 from .models import CourseModel
 from user.permissions import UserIsAdmin, UserIsTeacher
 from api.paginator import StandardPagination
@@ -196,6 +197,56 @@ class CourseUpdateDeleteAPIView(generics.GenericAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         response = {'detail': 'Course Deleted Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_201_CREATED)
+
+
+@extend_schema_view(patch=extend_schema(
+    request=CourseStatusSerializer,
+    responses={
+        #? 201
+        status.HTTP_201_CREATED:
+        OpenApiResponse(description='Course Status Updated Successfully', ),
+        #? 400
+        status.HTTP_400_BAD_REQUEST:
+        OpenApiResponse(
+            description='Bad Request',
+            response=OpenApiTypes.OBJECT,
+        ),
+    },
+    description=
+    ' Updates a Course Status \n\n Course Status are: drafted,requested,published \n\n Access: Admin, Teacher'
+))
+class CourseStatusUpdateAPIView(generics.GenericAPIView):
+    queryset = CourseModel.objects.all()
+    serializer_class = CourseStatusSerializer
+    permission_classes = [
+        permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
+    ]
+    # permission_classes = [
+    #     permissions.IsAuthenticated &
+    #     (UserIsAdmin |
+    #      (UserIsTeacher & CourseModel.course_status == 'drafted'))
+    # ]
+    lookup_field = 'pk'
+
+    #? Update a Category
+    def patch(self, request, *args, **kwargs):
+        category = self.get_object()
+        serializer = CourseSerializer(category,
+                                      data=request.data,
+                                      partial=True)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+        except Exception as ex:
+            logger.error(str(ex))
+
+            return Response({'detail': str(ex)},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'detail': 'Course Updated Successfully'}
         logger.info(response)
 
         return Response(response, status=status.HTTP_201_CREATED)
