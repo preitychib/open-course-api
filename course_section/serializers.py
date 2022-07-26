@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import CourseSectionModel
+from course_video.serializers import CourseVideoFullSerializer
 
 
 class CourseSectionFullSerializer(serializers.ModelSerializer):
@@ -16,3 +17,11 @@ class CourseSectionSerializer(serializers.ModelSerializer):
         exclude = [
             'created_on',
         ]
+
+
+class CourseSectionNestedSerializer(serializers.ModelSerializer):
+    video = CourseVideoFullSerializer(many=True)
+
+    class Meta:
+        model = CourseSectionModel
+        fields = '__all__'

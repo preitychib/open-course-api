@@ -2,6 +2,7 @@ from django.db import models
 from course.models import CourseModel
 from django.utils import timezone
 
+
 class CourseSectionModel(models.Model):
     """Model definition for CourseSectionModel."""
     section_tittle = models.TextField()
@@ -12,6 +13,7 @@ class CourseSectionModel(models.Model):
     course = models.ForeignKey(
         CourseModel,
         on_delete=models.CASCADE,
+        related_name='section',
     )
 
     # TODO: max and min length

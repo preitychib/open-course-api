@@ -16,13 +16,14 @@ class CourseVideoModel(models.Model):
     section = models.ForeignKey(
         CourseSectionModel,
         on_delete=models.CASCADE,
+        related_name='video',
     )
 
     class Meta:
         """Meta definition for CourseVideoModel."""
 
-        verbose_name = 'CourseVideo'
-        verbose_name_plural = 'CourseVideos'
+        verbose_name = 'Video'
+        verbose_name_plural = 'Videos'
 
     def __str__(self):
         """Unicode representation of CourseVideoModel."""

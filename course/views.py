@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CourseFullSerializer, CourseSerializer
+from .serializers import CourseFullSerializer, CourseNestedSerializer, CourseSerializer
 from .models import CourseModel
 from user.permissions import UserIsAdmin, UserIsTeacher
 from api.paginator import StandardPagination
@@ -93,20 +93,43 @@ class CourseListAPIView(generics.ListAPIView):
     ordering = '-created_on'
 
 
-@extend_schema_view(patch=extend_schema(
-    request=CourseSerializer,
-    responses={
-        #? 201
-        status.HTTP_201_CREATED:
-        OpenApiResponse(description='Course Updated Successfully', ),
-        #? 400
-        status.HTTP_400_BAD_REQUEST:
-        OpenApiResponse(
-            description='Bad Request',
-            response=OpenApiTypes.OBJECT,
-        ),
-    },
-    description=' Updates a Course \nAccess: Admin, Teacher'))
+@extend_schema_view(
+    get=extend_schema(
+        description='Returns Single Course of given Id.\n\nargs: pk',
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(
+                description='User Details',
+                response=CourseNestedSerializer,
+            ),
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='Not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        }),
+    patch=extend_schema(
+        request=CourseSerializer,
+        responses={
+            #? 201
+            status.HTTP_201_CREATED:
+            OpenApiResponse(description='Course Updated Successfully', ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        },
+        description=' Updates a Course \nAccess: Admin, Teacher'))
 @extend_schema_view(delete=extend_schema(
     responses={
         #? 201
@@ -134,6 +157,12 @@ class CourseUpdateDeleteAPIView(generics.GenericAPIView):
         permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
     ]
     lookup_field = 'pk'
+
+    #? get single User
+    def get(self, request, *args, **kwargs):
+        course = self.get_object()
+        serializer = CourseNestedSerializer(course)
+        return Response(serializer.data)
 
     #? Update a Category
     def patch(self, request, *args, **kwargs):
