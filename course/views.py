@@ -1,4 +1,3 @@
-from functools import partial
 import logging
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
