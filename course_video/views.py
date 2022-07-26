@@ -1,4 +1,3 @@
-import imp
 import logging
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
@@ -20,7 +19,7 @@ logger = logging.getLogger(__name__)
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
-            description='Categories List',
+            description='List of all Videos',
             response=CourseVideoFullSerializer,
         ),
         #? 400
@@ -33,8 +32,9 @@ logger = logging.getLogger(__name__)
 ))
 class CourseVideoListAPIView(generics.ListAPIView):
     '''
-        Allowed methods: GET
-       GET: Category List
+       Allowed methods: GET
+       GET: Video List
+       Access:Authenticated
     
        
     '''
