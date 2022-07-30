@@ -39,3 +39,40 @@ class CourseModel(models.Model):
     def __str__(self):
         """Unicode representation of CourseModel."""
         return self.course_name
+
+
+class CourseEnrollmentModel(models.Model):
+    """Model definition for CourseEnrollmentModel."""
+
+    student = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    course = models.ForeignKey(CourseModel, on_delete=models.CASCADE)
+    meta = models.JSONField()
+
+    class Meta:
+        """Meta definition for CourseEnrollmentModel."""
+
+        verbose_name = 'Enrollment'
+        verbose_name_plural = 'Enrollments'
+
+    def __str__(self):
+        """Unicode representation of CourseEnrollmentModel."""
+        return self.student.name
+
+
+class CourseReviewModel(models.Model):
+    """Model definition for CourseReviewModel."""
+
+    student = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+    course = models.ForeignKey(CourseModel, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    feedback = models.TextField()
+
+    class Meta:
+        """Meta definition for CourseReviewModel."""
+
+        verbose_name = 'Review'
+        verbose_name_plural = 'Reviews'
+
+    def __str__(self):
+        """Unicode representation of CourseReviewModel."""
+        return self.course.course_name
