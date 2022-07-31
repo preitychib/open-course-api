@@ -1,8 +1,12 @@
+from dataclasses import field, fields
 from rest_framework import serializers
 from course_section.serializers import CourseSectionNestedSerializer
-from .models import CourseModel
+from .models import CourseModel, CourseEnrollmentModel, CourseReviewModel
 
 
+#? =====================
+#? Course Serializers
+#? =====================
 class CourseFullSerializer(serializers.ModelSerializer):
     '''
         Full Serializer for course
@@ -28,6 +32,7 @@ class CourseSerializer(serializers.ModelSerializer):
 class CourseNestedSerializer(serializers.ModelSerializer):
     '''
         Course Serializer to get Nested data 
+        Return full data of course 
     '''
     section = CourseSectionNestedSerializer(many=True)
 
@@ -51,3 +56,29 @@ class CourseStatusSerializer(serializers.ModelSerializer):
     # def validated_course_status(self, value):
 
     #     return value
+
+
+#? =========================
+#? Course Review Serializers
+#? =========================
+
+
+class CourseReviewFullSerializer(serializers.ModelSerializer):
+    course = CourseNestedSerializer(many=True)
+
+    class Meta:
+        model = CourseReviewModel
+        fields = '__all__'
+
+
+#? =============================
+#? Course Enrollment Serializers
+#? =============================
+
+
+class CourseEnrollmentFullSerializer(serializers.ModelSerializer):
+    # course = CourseNestedSerializer(many=True)
+
+    class Meta:
+        model = CourseEnrollmentModel
+        fields = '__all__'
