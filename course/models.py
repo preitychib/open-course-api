@@ -44,9 +44,12 @@ class CourseModel(models.Model):
 class CourseEnrollmentModel(models.Model):
     """Model definition for CourseEnrollmentModel."""
 
-    student = models.ForeignKey(UserModel, on_delete=models.CASCADE)
-    course = models.ForeignKey(CourseModel, on_delete=models.CASCADE)
-    meta = models.JSONField()
+    student = models.ManyToManyField(UserModel)
+    # student = models.ManyToManyField(UserModel, on_delete=models.CASCADE)
+    course = models.ManyToManyField(CourseModel)
+    # course = models.ManyToManyField(CourseModel, on_delete=models.CASCADE)
+    meta = models.JSONField(blank=True, null=True)
+    created_on = models.DateTimeField(default=timezone.now)
 
     class Meta:
         """Meta definition for CourseEnrollmentModel."""
@@ -56,7 +59,8 @@ class CourseEnrollmentModel(models.Model):
 
     def __str__(self):
         """Unicode representation of CourseEnrollmentModel."""
-        return self.student.name
+        # return self.student.name
+        pass
 
 
 class CourseReviewModel(models.Model):
@@ -65,7 +69,8 @@ class CourseReviewModel(models.Model):
     student = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     course = models.ForeignKey(CourseModel, on_delete=models.CASCADE)
     rating = models.IntegerField()
-    feedback = models.TextField()
+    feedback = models.TextField(blank=True, null=True)
+    created_on = models.DateTimeField(default=timezone.now)
 
     class Meta:
         """Meta definition for CourseReviewModel."""
@@ -75,4 +80,4 @@ class CourseReviewModel(models.Model):
 
     def __str__(self):
         """Unicode representation of CourseReviewModel."""
-        return self.course.course_name
+        pass

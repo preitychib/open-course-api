@@ -15,6 +15,7 @@ from video_upload import views as VideoUploadViews
 from category import views as CategoryViews
 
 from course import views as CourseViews
+from course import course_enrollment_views as CourseEnrollViews
 
 from course_video import views as CourseVideoViews
 
@@ -111,4 +112,12 @@ urlpatterns = [
     path('course-video/<int:pk>/',
          CourseVideoViews.CourseVideoUpdateDeleteAPIView.as_view(),
          name='course-video-update-delete'),
+
+    #? Course Enrollemt
+    path('course-enroll/',
+         CourseEnrollViews.CourseEnrollmentCreateAPIView.as_view(),
+         name='course-enroll'),
+    path('course-enroll/all/',
+         CourseEnrollViews.CourseEnrollmentListAPIView.as_view(),
+         name='course-enroll-list'),
 ]

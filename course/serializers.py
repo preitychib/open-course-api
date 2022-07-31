@@ -1,7 +1,8 @@
-from dataclasses import field, fields
 from rest_framework import serializers
 from course_section.serializers import CourseSectionNestedSerializer
 from .models import CourseModel, CourseEnrollmentModel, CourseReviewModel
+from user.models import UserModel
+from user.serializers import UserSerializer
 
 
 #? =====================
@@ -63,8 +64,16 @@ class CourseStatusSerializer(serializers.ModelSerializer):
 #? =========================
 
 
-class CourseReviewFullSerializer(serializers.ModelSerializer):
-    course = CourseNestedSerializer(many=True)
+class CourseReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseReviewModel
+        fields = '__all__'
+
+
+class CourseReviewNestedSerializer(serializers.ModelSerializer):
+    course = CourseSerializer(many=True)
+    student = UserSerializer(many=True)
 
     class Meta:
         model = CourseReviewModel
@@ -76,8 +85,19 @@ class CourseReviewFullSerializer(serializers.ModelSerializer):
 #? =============================
 
 
-class CourseEnrollmentFullSerializer(serializers.ModelSerializer):
-    # course = CourseNestedSerializer(many=True)
+class CourseEnrollmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseEnrollmentModel
+        exclude = [
+            'created_on',
+            'meta',
+        ]
+
+
+class CourseEnrollmentNestedSerializer(serializers.ModelSerializer):
+    course = CourseNestedSerializer(many=True)
+    student = UserSerializer(many=True)
 
     class Meta:
         model = CourseEnrollmentModel
