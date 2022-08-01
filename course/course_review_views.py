@@ -8,20 +8,20 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CourseEnrollmentSerializer, CourseEnrollmentNestedSerializer
-from .models import CourseEnrollmentModel
-from user.permissions import UserIsAdmin, UserIsTeacher, UserIsStudent
+from .serializers import CourseReviewSerializer, CourseReviewNestedSerializer
+from .models import CourseReviewModel
+from user.permissions import UserIsAdmin, UserIsStudent
 from api.paginator import StandardPagination
 
 logger = logging.getLogger(__name__)
 
 
 @extend_schema_view(post=extend_schema(
-    request=CourseEnrollmentSerializer,
+    request=CourseReviewSerializer,
     responses={
         #? 201
         status.HTTP_201_CREATED:
-        OpenApiResponse(description='Enrolled in Course Successfully', ),
+        OpenApiResponse(description='Course Review Created Successfully', ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
         OpenApiResponse(
@@ -29,24 +29,24 @@ logger = logging.getLogger(__name__)
             response=OpenApiTypes.OBJECT,
         ),
     },
-    description='Enroll Student in a Course.\n Accessed by: admin and student.'))
-class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
+    description='Creates Course Review.\n Accessed by: admin and student.'))
+class CourseReviewCreateAPIView(generics.CreateAPIView):
     '''
         Allowed methods: POST
-        POST: Enroll Student in a Course
+        POST:Creates Course Review.
         Access: Admin,Student
        
     '''
-    queryset = CourseEnrollmentModel.objects.all()
-    serializer_class = CourseEnrollmentSerializer
+    queryset = CourseReviewModel.objects.all()
+    serializer_class = CourseReviewSerializer
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
     ]
 
     # Todo: A alot
-    #? Create a new Course Enrollment
+    #? Create a new Course Review
     def post(self, request, *args, **kwargs):
-        serializer = CourseEnrollmentSerializer(data=request.data)
+        serializer = CourseReviewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
             serializer.save()
@@ -56,20 +56,20 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
             return Response({'detail': str(ex)},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        response = {'detail': 'Enrolled in Course Successfully'}
+        response = {'detail': 'Course Review Created Successfully'}
         logger.info(response)
 
         return Response(response, status=status.HTTP_201_CREATED)
 
 
 @extend_schema_view(get=extend_schema(
-    request=CourseEnrollmentNestedSerializer,
+    request=CourseReviewNestedSerializer,
     responses={
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
-            description='Course Enrollment List',
-            response=CourseEnrollmentNestedSerializer,
+            description='Course Review List',
+            response=CourseReviewNestedSerializer,
         ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
@@ -79,7 +79,7 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
         ),
     },
 ))
-class CourseEnrollmentListAPIView(generics.ListAPIView):
+class CourseReviewListAPIView(generics.ListAPIView):
     '''
         Allowed methods: GET
         GET: Course List
@@ -87,8 +87,8 @@ class CourseEnrollmentListAPIView(generics.ListAPIView):
        
     '''
 
-    queryset = CourseEnrollmentModel.objects.all()
-    serializer_class = CourseEnrollmentNestedSerializer
+    queryset = CourseReviewModel.objects.all()
+    serializer_class = CourseReviewNestedSerializer
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
     ]

@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 class CourseCreateAPIView(generics.CreateAPIView):
     '''
         Allowed methods: POST
-        POST: Creates a Category 
+        POST: Creates a new Course
         Access: Admin,Teacher
        
     '''
@@ -43,7 +43,7 @@ class CourseCreateAPIView(generics.CreateAPIView):
         permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
     ]
 
-    #? Create a new Category
+    #? Create a new Course
     def post(self, request, *args, **kwargs):
         serializer = CourseSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -146,6 +146,7 @@ class CourseListAPIView(generics.ListAPIView):
 class CourseUpdateDeleteAPIView(generics.GenericAPIView):
     '''
         Allowed methods: Patch
+        GET: Course by ID
         PATCH: Update a Course 
         DELETE: Delete a Course 
         Access: Admin, Teacher
@@ -158,13 +159,13 @@ class CourseUpdateDeleteAPIView(generics.GenericAPIView):
     ]
     lookup_field = 'pk'
 
-    #? get single User
+    #? get single Course
     def get(self, request, *args, **kwargs):
         course = self.get_object()
         serializer = CourseNestedSerializer(course)
         return Response(serializer.data)
 
-    #? Update a Category
+    #? Update a Course
     def patch(self, request, *args, **kwargs):
         category = self.get_object()
         serializer = CourseSerializer(category,
@@ -184,7 +185,7 @@ class CourseUpdateDeleteAPIView(generics.GenericAPIView):
 
         return Response(response, status=status.HTTP_201_CREATED)
 
-    #? Delete a Category
+    #? Delete a Course
     def delete(self, request, *args, **kwargs):
         category = self.get_object()
         try:
@@ -230,7 +231,7 @@ class CourseStatusUpdateAPIView(generics.GenericAPIView):
     # ]
     lookup_field = 'pk'
 
-    #? Update a Category
+    #? Update a Course Status
     def patch(self, request, *args, **kwargs):
         category = self.get_object()
         serializer = CourseSerializer(category,
@@ -245,7 +246,7 @@ class CourseStatusUpdateAPIView(generics.GenericAPIView):
             return Response({'detail': str(ex)},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        response = {'detail': 'Course Updated Successfully'}
+        response = {'detail': 'Course Status Updated Successfully'}
         logger.info(response)
 
         return Response(response, status=status.HTTP_201_CREATED)

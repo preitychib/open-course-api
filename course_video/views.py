@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
-            description='List of all Videos',
+            description='List of all Course Videos',
             response=CourseVideoFullSerializer,
         ),
         #? 400
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 class CourseVideoListAPIView(generics.ListAPIView):
     '''
        Allowed methods: GET
-       GET: Video List
+       GET:course Video List
        Access:Authenticated
     
        
@@ -50,7 +50,7 @@ class CourseVideoListAPIView(generics.ListAPIView):
 class CourseVideoCreateAPIView(generics.CreateAPIView):
     '''
         Allowed methods: POST
-        POST: Creates a new Video
+        POST: Creates a new Course Video
         Access:Admin And Teacher 
     '''
 
@@ -60,7 +60,7 @@ class CourseVideoCreateAPIView(generics.CreateAPIView):
         permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
     ]
 
-    #? Creates a new Video
+    #? Creates a new Course Video
     def post(self, request, *args, **kwargs):
         serializer = CourseVideoSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -73,7 +73,7 @@ class CourseVideoCreateAPIView(generics.CreateAPIView):
             return Response({'detail': str(ex)},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        response = {'detail': 'Video Created Successfully'}
+        response = {'detail': 'Course Video Created Successfully'}
         logger.info(response)
 
         return Response(response, status=status.HTTP_201_CREATED)
@@ -121,7 +121,7 @@ class CourseVideoUpdateDeleteAPIView(generics.GenericAPIView):
     ]
     lookup_field = 'pk'
 
-    #? Update a Category
+    #? Update a Course Video
     def patch(self, request, *args, **kwargs):
         category = self.get_object()
         serializer = CourseVideoSerializer(category,
@@ -141,7 +141,7 @@ class CourseVideoUpdateDeleteAPIView(generics.GenericAPIView):
 
         return Response(response, status=status.HTTP_201_CREATED)
 
-    #? Delete a Category
+    #? Delete a Course Video
     def delete(self, request, *args, **kwargs):
         category = self.get_object()
         try:

@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 class CourseSectionCreateAPIView(generics.CreateAPIView):
     '''
         Allowed methods: POST
-        POST: Creates a Category 
+        POST: Creates a Course Section
         Access: Admin,Teacher
        
     '''
@@ -82,7 +82,7 @@ class CourseSectionCreateAPIView(generics.CreateAPIView):
 class CourseSectionListAPIView(generics.ListAPIView):
     '''
         Allowed methods: GET
-       GET: Category List
+       GET: Course Section List
     
        
     '''
@@ -107,7 +107,7 @@ class CourseSectionListAPIView(generics.ListAPIView):
             response=OpenApiTypes.OBJECT,
         ),
     },
-    description=' Updates a Course Video\nAccess: Admin, Teacher'))
+    description=' Updates a Course Section\nAccess: Admin, Teacher'))
 @extend_schema_view(delete=extend_schema(
     responses={
         #? 201

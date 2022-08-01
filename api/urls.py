@@ -16,6 +16,7 @@ from category import views as CategoryViews
 
 from course import views as CourseViews
 from course import course_enrollment_views as CourseEnrollViews
+from course import course_review_views as CourseReviewViews
 
 from course_video import views as CourseVideoViews
 
@@ -116,8 +117,16 @@ urlpatterns = [
     #? Course Enrollemt
     path('course-enroll/',
          CourseEnrollViews.CourseEnrollmentCreateAPIView.as_view(),
-         name='course-enroll'),
+         name='course-enroll-create'),
     path('course-enroll/all/',
          CourseEnrollViews.CourseEnrollmentListAPIView.as_view(),
          name='course-enroll-list'),
+
+    #? Course Review
+    path('course-review/',
+         CourseReviewViews.CourseReviewCreateAPIView.as_view(),
+         name='course-review-create'),
+    path('course-review/all/',
+         CourseReviewViews.CourseReviewListAPIView.as_view(),
+         name='course-review-list'),
 ]
