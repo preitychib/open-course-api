@@ -68,7 +68,9 @@ class CourseReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CourseReviewModel
-        fields = '__all__'
+        exclude = [
+            'created_on',
+        ]
 
 
 class CourseReviewNestedSerializer(serializers.ModelSerializer):

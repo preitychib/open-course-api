@@ -66,8 +66,8 @@ class CourseEnrollmentModel(models.Model):
 class CourseReviewModel(models.Model):
     """Model definition for CourseReviewModel."""
 
-    student = models.ForeignKey(UserModel, on_delete=models.CASCADE)
-    course = models.ForeignKey(CourseModel, on_delete=models.CASCADE)
+    student = models.ManyToManyField(UserModel)
+    course = models.ManyToManyField(CourseModel)
     rating = models.IntegerField()
     feedback = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(default=timezone.now)
