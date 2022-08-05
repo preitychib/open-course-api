@@ -1,5 +1,6 @@
 from django.db import models
 from user.models import UserModel
+from django.utils import timezone
 
 
 class StudentProgressModel(models.Model):
@@ -7,6 +8,7 @@ class StudentProgressModel(models.Model):
 
     student = models.ManyToManyField(UserModel)
     meta_data = models.JSONField(blank=True, null=True)
+    created_on = models.DateTimeField(default=timezone.now)
 
     class Meta:
         """Meta definition for StudentProgressModel."""
@@ -16,4 +18,4 @@ class StudentProgressModel(models.Model):
 
     def __str__(self):
         """Unicode representation of StudentProgressModel."""
-        pass
+        return self.student

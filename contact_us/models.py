@@ -1,5 +1,5 @@
-import email
 from django.db import models
+from django.utils import timezone
 
 
 class ContactUsModel(models.Model):
@@ -8,6 +8,7 @@ class ContactUsModel(models.Model):
     name = models.TextField()
     email = models.EmailField()
     message = models.TextField(max_length=20)
+    created_on = models.DateTimeField(default=timezone.now)
 
     class Meta:
         """Meta definition for ContactUsModel."""
@@ -17,4 +18,4 @@ class ContactUsModel(models.Model):
 
     def __str__(self):
         """Unicode representation of ContactUsModel."""
-        pass
+        return self.email
