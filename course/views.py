@@ -167,8 +167,8 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
 
     #? Update a Course
     def patch(self, request, *args, **kwargs):
-        category = self.get_object()
-        serializer = CourseSerializer(category,
+        course = self.get_object()
+        serializer = CourseSerializer(course,
                                       data=request.data,
                                       partial=True)
         serializer.is_valid(raise_exception=True)
@@ -187,9 +187,9 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
 
     #? Delete a Course
     def delete(self, request, *args, **kwargs):
-        category = self.get_object()
+        course = self.get_object()
         try:
-            category.delete()
+            course.delete()
         except Exception as ex:
             logger.error(str(ex))
 
@@ -233,8 +233,8 @@ class CourseStatusUpdateAPIView(generics.GenericAPIView):
 
     #? Update a Course Status
     def patch(self, request, *args, **kwargs):
-        category = self.get_object()
-        serializer = CourseSerializer(category,
+        course = self.get_object()
+        serializer = CourseSerializer(course,
                                       data=request.data,
                                       partial=True)
         serializer.is_valid(raise_exception=True)

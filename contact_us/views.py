@@ -91,3 +91,81 @@ class ContactUsAdminListAPIView(generics.ListAPIView):
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
+
+
+@extend_schema_view(patch=extend_schema(
+    request=ContactUsSerializer,
+    responses={
+        #? 201
+        status.HTTP_201_CREATED:
+        OpenApiResponse(description='Contact Us Updated Successfully', ),
+        #? 400
+        status.HTTP_400_BAD_REQUEST:
+        OpenApiResponse(
+            description='Bad Request',
+            response=OpenApiTypes.OBJECT,
+        ),
+    },
+    description=' Updates a Contact Us \nAccess: Admin'))
+@extend_schema_view(delete=extend_schema(
+    responses={
+        #? 201
+        status.HTTP_201_CREATED:
+        OpenApiResponse(description='Course Deleted Successfully', ),
+        #? 400
+        status.HTTP_400_BAD_REQUEST:
+        OpenApiResponse(
+            description='Bad Request',
+            response=OpenApiTypes.OBJECT,
+        ),
+    },
+    description='Delete a Contact Us \nAccess: Admin'))
+class ContactUsAdminUpdateDeleteAPIView(generics.GenericAPIView):
+    '''
+        Allowed methods: Patch
+        
+        PATCH: Update a Course 
+        DELETE: Delete a Course 
+        Access: Admin
+       
+    '''
+    queryset = ContactUsModel.objects.all()
+    serializer_class = ContactUsSerializer
+    permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
+    lookup_field = 'pk'
+
+    #? Update a Contact Us message
+    def patch(self, request, *args, **kwargs):
+        contact = self.get_object()
+        serializer = ContactUsSerializer(contact,
+                                         data=request.data,
+                                         partial=True)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+        except Exception as ex:
+            logger.error(str(ex))
+
+            return Response({'detail': str(ex)},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'detail': 'Contact Us Updated Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_201_CREATED)
+
+    #? Delete a Course
+    def delete(self, request, *args, **kwargs):
+        contact = self.get_object()
+        try:
+            contact.delete()
+        except Exception as ex:
+            logger.error(str(ex))
+
+            return Response({'detail': str(ex)},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'detail': 'Course Deleted Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_201_CREATED)

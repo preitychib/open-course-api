@@ -97,3 +97,113 @@ class CourseReviewListAPIView(generics.ListAPIView):
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
+
+
+@extend_schema_view(
+    get=extend_schema(
+        description='Returns Single Course Review of given Id.\n\nargs: pk',
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(
+                description='Course Review Details',
+                response=CourseReviewNestedSerializer,
+            ),
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='Not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        }),
+    patch=extend_schema(
+        request=CourseReviewSerializer,
+        responses={
+            #? 201
+            status.HTTP_201_CREATED:
+            OpenApiResponse(
+                description='Course Review Updated Successfully', ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        },
+        description=' Updates a Course Review\nAccess: Admin, Student'))
+@extend_schema_view(delete=extend_schema(
+    responses={
+        #? 201
+        status.HTTP_201_CREATED:
+        OpenApiResponse(description='Course Review Deleted Successfully', ),
+        #? 400
+        status.HTTP_400_BAD_REQUEST:
+        OpenApiResponse(
+            description='Bad Request',
+            response=OpenApiTypes.OBJECT,
+        ),
+    },
+    description='Delete a Course Review\nAccess: Admin,Student'))
+class CourseReviewUpdateRetriveDeleteAPIView(generics.GenericAPIView):
+    '''
+        Allowed methods: Patch
+        GET: Course by ID
+        PATCH: Update a Course 
+        DELETE: Delete a Course 
+        Access: Admin, Student
+       
+    '''
+    queryset = CourseReviewModel.objects.all()
+    serializer_class = CourseReviewNestedSerializer
+    permission_classes = [
+        permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
+    ]
+    lookup_field = 'pk'
+
+    #? get single Course
+    def get(self, request, *args, **kwargs):
+        review = self.get_object()
+        serializer = CourseReviewNestedSerializer(review)
+        return Response(serializer.data)
+
+    #? Update a Course
+    def patch(self, request, *args, **kwargs):
+        review = self.get_object()
+        serializer = CourseReviewSerializer(review,
+                                            data=request.data,
+                                            partial=True)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+        except Exception as ex:
+            logger.error(str(ex))
+
+            return Response({'detail': str(ex)},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'detail': 'Course Review Updated Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_201_CREATED)
+
+    #? Delete a Course
+    def delete(self, request, *args, **kwargs):
+        review = self.get_object()
+        try:
+            review.delete()
+        except Exception as ex:
+            logger.error(str(ex))
+
+            return Response({'detail': str(ex)},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'detail': 'Course Review Deleted Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_201_CREATED)

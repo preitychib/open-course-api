@@ -135,6 +135,9 @@ urlpatterns = [
     path('course-review/all/',
          CourseReviewViews.CourseReviewListAPIView.as_view(),
          name='course-review-list'),
+    path('course-review/<int:pk>/',
+         CourseReviewViews.CourseReviewUpdateRetriveDeleteAPIView.as_view(),
+         name='course-review-update-delete-retrive'),
 
     #? Contact Us
     path('contact-us/',
@@ -143,6 +146,9 @@ urlpatterns = [
     path('contact-us/all/',
          ContactUsViews.ContactUsAdminListAPIView.as_view(),
          name='contact-us-list'),
+    path('contact-us/<int:pk>/',
+         ContactUsViews.ContactUsAdminUpdateDeleteAPIView.as_view(),
+         name='contact-us-update-delete'),
 
     #? Student Progress
     path('student-progress/',
