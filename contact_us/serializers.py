@@ -9,3 +9,5 @@ class ContactUsSerializer(serializers.ModelSerializer):
         exclude = [
             'created_on',
         ]
+
+    # todo: add validations

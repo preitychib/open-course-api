@@ -143,4 +143,9 @@ urlpatterns = [
     path('contact-us/all/',
          ContactUsViews.ContactUsAdminListAPIView.as_view(),
          name='contact-us-list'),
+
+    #? Student Progress
+    path('student-progress/',
+         StudProgressViews.StudentProgressCreateAPIView.as_view(),
+         name='student-progress-create'),
 ]
