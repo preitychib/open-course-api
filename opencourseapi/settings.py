@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     'course_section',
     'course_video',
     'category',
+    'contact_us',
+    'student_progress',
 ]
 
 MIDDLEWARE = [
