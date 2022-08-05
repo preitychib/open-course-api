@@ -143,7 +143,7 @@ class CourseListAPIView(generics.ListAPIView):
         ),
     },
     description='Delete a Course \nAccess: Admin, Teacher'))
-class CourseUpdateDeleteAPIView(generics.GenericAPIView):
+class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     '''
         Allowed methods: Patch
         GET: Course by ID

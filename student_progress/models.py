@@ -20,4 +20,4 @@ class StudentProgressModel(models.Model):
     def __str__(self):
         """Unicode representation of StudentProgressModel."""
         # return self.student.id
-        pass
+        return self.student

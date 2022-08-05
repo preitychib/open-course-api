@@ -326,7 +326,7 @@ class UserPasswordUpdateAdminAPIView(generics.GenericAPIView):
             ),
             #? 400
             status.HTTP_400_BAD_REQUEST:
-            OpenApiResponse(
+            OpenApiResponse(    
                 description='Bad Request',
                 response=OpenApiTypes.OBJECT,
             ),
@@ -353,7 +353,7 @@ class UserPasswordUpdateAdminAPIView(generics.GenericAPIView):
             ),
         }),
 )
-class UserRetrieveUpdateAPIView(generics.GenericAPIView):
+class CurrentUserRetrieveUpdateAPIView(generics.GenericAPIView):
     '''
         Allowed methods: GET, PATCH
         GET: Return Logged in user data

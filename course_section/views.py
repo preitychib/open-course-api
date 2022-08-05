@@ -136,10 +136,10 @@ class CourseSectionUpdateDeleteAPIView(generics.GenericAPIView):
     ]
     lookup_field = 'pk'
 
-    #? Update a Category
+    #? Update a Course Section
     def patch(self, request, *args, **kwargs):
-        category = self.get_object()
-        serializer = CourseSectionSerializer(category,
+        course_section = self.get_object()
+        serializer = CourseSectionSerializer(course_section,
                                              data=request.data,
                                              partial=True)
         serializer.is_valid(raise_exception=True)
@@ -158,9 +158,9 @@ class CourseSectionUpdateDeleteAPIView(generics.GenericAPIView):
 
     #? Delete a Category
     def delete(self, request, *args, **kwargs):
-        category = self.get_object()
+        course_section = self.get_object()
         try:
-            category.delete()
+            course_section.delete()
         except Exception as ex:
             logger.error(str(ex))
 
