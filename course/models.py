@@ -48,7 +48,8 @@ class CourseEnrollmentModel(models.Model):
     # student = models.ManyToManyField(UserModel, on_delete=models.CASCADE)
     course = models.ManyToManyField(CourseModel)
     # course = models.ManyToManyField(CourseModel, on_delete=models.CASCADE)
-    meta = models.JSONField(blank=True, null=True)
+    # todo: meta_data
+    meta_data = models.JSONField(blank=True, null=True)
     created_on = models.DateTimeField(default=timezone.now)
 
     class Meta:

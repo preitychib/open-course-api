@@ -40,6 +40,7 @@ class CourseNestedSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseModel
         fields = '__all__'
+        depth = 1
 
 
 class CourseStatusSerializer(serializers.ModelSerializer):
