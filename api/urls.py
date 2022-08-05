@@ -15,12 +15,18 @@ from video_upload import views as VideoUploadViews
 from category import views as CategoryViews
 
 from course import views as CourseViews
+
 from course import course_enrollment_views as CourseEnrollViews
+
 from course import course_review_views as CourseReviewViews
 
 from course_video import views as CourseVideoViews
 
 from course_section import views as CourseSectionViews
+
+from student_progress import views as StudProgressViews
+
+from contact_us import views as ContactUsViews
 
 urlpatterns = [
 
@@ -129,4 +135,12 @@ urlpatterns = [
     path('course-review/all/',
          CourseReviewViews.CourseReviewListAPIView.as_view(),
          name='course-review-list'),
+
+    #? Contact Us
+    path('contact-us/',
+         ContactUsViews.ContactUsCreateAPIView.as_view(),
+         name='contact-us-create'),
+    path('contact-us/all/',
+         ContactUsViews.ContactUsAdminListAPIView.as_view(),
+         name='contact-us-list'),
 ]
