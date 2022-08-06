@@ -6,7 +6,6 @@ from drf_spectacular.types import OpenApiTypes
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
-import student_progress
 from .serializers import StudentProgressSerializer, StudentProgressPostSerializer
 from .models import StudentProgressModel
 from user.permissions import UserIsAdmin, UserIsStudent
@@ -82,8 +81,7 @@ class StudentProgressCreateAPIView(generics.CreateAPIView):
         }),
     patch=extend_schema(
         request=StudentProgressSerializer,
-        description=
-        'Updates the Student Progress of  Student.\n\nargs: pk',
+        description='Updates the Student Progress of  Student.\n\nargs: pk',
         responses={
             #? 200
             status.HTTP_200_OK:
