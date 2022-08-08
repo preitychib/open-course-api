@@ -9,8 +9,11 @@ from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
 
 from .serializers import CourseGetAllSerializer, CourseNestedFullSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
+
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .models import CourseModel
-from user.permissions import UserIsAdmin, UserIsTeacher
+from user.permissions import UserIsAdmin, UserIsStudent, UserIsTeacher
 from api.paginator import StandardPagination
 
 logger = logging.getLogger(__name__)
@@ -87,8 +90,10 @@ class CourseListAPIView(generics.ListAPIView):
     '''
     queryset = CourseModel.objects.all()
     serializer_class = CourseGetAllSerializer
+    # permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
     pagination_class = StandardPagination
-    filter_backends = [OrderingFilter]
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ['category']
     ordering_fields = 'created_on'
     ordering = '-created_on'
 
@@ -121,20 +126,20 @@ class CourseRequestedListAPIView(generics.ListAPIView):
     serializer_class = CourseGetAllSerializer
     permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
     pagination_class = StandardPagination
-    filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
 
 
 @extend_schema_view(
     get=extend_schema(
-        description='Returns Single Course of given Id.\n\nargs: pk',
+        description=
+        'Returns Single Course of given Id.\n\nargs: pk\n\n Access: Everyone\n\nNote: For Admin and Teacher the response contains video links\n\n For others the response does not contain video links',
         responses={
             #? 200
             status.HTTP_200_OK:
             OpenApiResponse(
                 description='User Details',
-                response=CourseNestedFullSerializer,
+                response=CourseGetAllSerializer,
             ),
             #? 404
             status.HTTP_404_NOT_FOUND:
@@ -187,15 +192,19 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     '''
     queryset = CourseModel.objects.all()
     serializer_class = CourseUpdateSerializer
-    permission_classes = [
-        permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
-    ]
+    # permission_classes = [
+    #     permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
+    # ]
     lookup_field = 'pk'
 
     #? get single Course
+
     def get(self, request, *args, **kwargs):
         course = self.get_object()
-        serializer = CourseNestedFullSerializer(course)
+        if request.user.is_authenticated and request.user.is_student != True:
+            serializer = CourseNestedFullSerializer(course)
+        else:
+            serializer = CourseGetAllSerializer(course)
         return Response(serializer.data)
 
     #? Update a Course
