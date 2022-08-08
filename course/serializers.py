@@ -27,6 +27,23 @@ class CourseSerializer(serializers.ModelSerializer):
         model = CourseModel
         exclude = [
             'created_on',
+            'total_videos',
+            'total_duration',
+            'published_on',
+            'course_status',
+        ]
+
+
+class CourseUpdateSerializer(serializers.ModelSerializer):
+    '''
+        Course Serializer
+    '''
+
+    class Meta:
+        model = CourseModel
+        exclude = [
+            'created_on',
+            'course_status',
         ]
 
 
@@ -35,6 +52,7 @@ class CourseNestedSerializer(serializers.ModelSerializer):
         Course Serializer to get Nested data 
         Return full data of course 
     '''
+    teacher = UserSerializer()
     section = CourseSectionNestedSerializer(many=True)
 
     class Meta:

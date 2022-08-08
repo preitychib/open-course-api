@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CourseFullSerializer, CourseNestedSerializer, CourseSerializer, CourseStatusSerializer
+from .serializers import CourseFullSerializer, CourseNestedSerializer, CourseSerializer, CourseStatusSerializer, CourseUpdateSerializer
 from .models import CourseModel
 from user.permissions import UserIsAdmin, UserIsTeacher
 from api.paginator import StandardPagination
@@ -117,7 +117,7 @@ class CourseListAPIView(generics.ListAPIView):
             ),
         }),
     patch=extend_schema(
-        request=CourseSerializer,
+        request=CourseUpdateSerializer,
         responses={
             #? 201
             status.HTTP_201_CREATED:
@@ -153,7 +153,7 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
        
     '''
     queryset = CourseModel.objects.all()
-    serializer_class = CourseSerializer
+    serializer_class = CourseUpdateSerializer
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
     ]
@@ -168,9 +168,7 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     #? Update a Course
     def patch(self, request, *args, **kwargs):
         course = self.get_object()
-        serializer = CourseSerializer(course,
-                                      data=request.data,
-                                      partial=True)
+        serializer = CourseSerializer(course, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         try:
             serializer.save()
@@ -234,9 +232,7 @@ class CourseStatusUpdateAPIView(generics.GenericAPIView):
     #? Update a Course Status
     def patch(self, request, *args, **kwargs):
         course = self.get_object()
-        serializer = CourseSerializer(course,
-                                      data=request.data,
-                                      partial=True)
+        serializer = CourseSerializer(course, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         try:
             serializer.save()

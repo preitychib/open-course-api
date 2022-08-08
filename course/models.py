@@ -15,9 +15,12 @@ class CourseModel(models.Model):
     course_name = models.TextField()
     created_on = models.DateTimeField(default=timezone.now)
     published_on = models.DateTimeField()
-    course_status = models.CharField(choices=COURSE_STATUS, max_length=14)
+    course_status = models.CharField(choices=COURSE_STATUS, max_length=14,default='drafted')
     total_videos = models.IntegerField()
     total_duration = models.IntegerField()
+    cover_image = models.URLField(blank=True, null=True)
+    cover_image_public_id = models.TextField(blank=True, null=True)
+    description=models.TextField(max_length=100)
     #? Many to one realtion with Category Model
     category = models.ForeignKey(
         CategoryModel,
