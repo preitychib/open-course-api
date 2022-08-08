@@ -80,7 +80,7 @@ class CourseStatusSerializer(serializers.ModelSerializer):
 
 class CourseStatusTeacherSerializer(serializers.ModelSerializer):
     '''
-        Course's status serializer
+        Course's status serializer for Teacher
     '''
     course_status = serializers.ChoiceField((
         ('drafted', 'drafted'),

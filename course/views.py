@@ -214,7 +214,7 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
         ),
     },
     description=
-    ' Updates a Course Status \n\n Course Status are: drafted,requested,published \n\n Access: Admin, Teacher'
+    ' Updates a Course Status \n\n Course Status are: drafted,requested,published \n\n Access: Admin, Teacher\n\nNote:Teacher cannot change course status to published.'
 ))
 class CourseStatusUpdateAPIView(generics.GenericAPIView):
     queryset = CourseModel.objects.all()
@@ -228,7 +228,6 @@ class CourseStatusUpdateAPIView(generics.GenericAPIView):
     #? Update a Course Status
     def patch(self, request, *args, **kwargs):
         course = self.get_object()
-        print(request.user.is_teacher)
         if request.user.is_teacher == True:
             serializer = CourseStatusTeacherSerializer(course,
                                                        data=request.data,
