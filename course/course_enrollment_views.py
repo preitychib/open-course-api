@@ -8,6 +8,8 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .serializers import CourseEnrollmentSerializer, CourseEnrollmentNestedSerializer
 from .models import CourseEnrollmentModel
 from user.permissions import UserIsAdmin, UserIsTeacher, UserIsStudent
@@ -29,7 +31,8 @@ logger = logging.getLogger(__name__)
             response=OpenApiTypes.OBJECT,
         ),
     },
-    description='Enroll Student in a Course.\n Accessed by: admin and student.'))
+    description='Enroll Student in a Course.\n Accessed by: admin and student.'
+))
 class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
     '''
         Allowed methods: POST
@@ -97,3 +100,5 @@ class CourseEnrollmentListAPIView(generics.ListAPIView):
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ['course']

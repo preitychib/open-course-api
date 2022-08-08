@@ -93,10 +93,11 @@ class CourseSectionListAPIView(generics.ListAPIView):
     queryset = CourseSectionModel.objects.all()
     serializer_class = CourseSectionNestedSerializer
     pagination_class = StandardPagination
+    # Todo permission?
     filter_backends = [OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ['course']
     ordering_fields = 'created_on'
     ordering = '-created_on'
-    filterset_fields = ['course']
 
     # def list(self, request, *args, **kwargs):
     #     print(kwargs['course'])
