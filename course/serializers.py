@@ -65,7 +65,11 @@ class CourseStatusSerializer(serializers.ModelSerializer):
     '''
         Course's status serializer
     '''
-    course_status = serializers.CharField(max_length=12)
+    course_status = serializers.ChoiceField((
+        ('drafted', 'drafted'),
+        ('requested', 'requested'),
+        ('published', 'published'),
+    ))
 
     class Meta:
         model = CourseModel
@@ -73,9 +77,21 @@ class CourseStatusSerializer(serializers.ModelSerializer):
             'course_status',
         ]
 
-    # def validated_course_status(self, value):
 
-    #     return value
+class CourseStatusTeacherSerializer(serializers.ModelSerializer):
+    '''
+        Course's status serializer
+    '''
+    course_status = serializers.ChoiceField((
+        ('drafted', 'drafted'),
+        ('requested', 'requested'),
+    ))
+
+    class Meta:
+        model = CourseModel
+        fields = [
+            'course_status',
+        ]
 
 
 #? =========================

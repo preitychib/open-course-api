@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CourseFullSerializer, CourseNestedSerializer, CourseSerializer, CourseStatusSerializer, CourseUpdateSerializer
+from .serializers import CourseFullSerializer, CourseNestedSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
 from .models import CourseModel
 from user.permissions import UserIsAdmin, UserIsTeacher
 from api.paginator import StandardPagination
@@ -218,21 +218,25 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
 ))
 class CourseStatusUpdateAPIView(generics.GenericAPIView):
     queryset = CourseModel.objects.all()
-    serializer_class = CourseStatusSerializer
+    serializer_class = [CourseStatusSerializer, CourseStatusTeacherSerializer]
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
     ]
-    # permission_classes = [
-    #     permissions.IsAuthenticated &
-    #     (UserIsAdmin |
-    #      (UserIsTeacher & CourseModel.course_status == 'drafted'))
-    # ]
+
     lookup_field = 'pk'
 
     #? Update a Course Status
     def patch(self, request, *args, **kwargs):
         course = self.get_object()
-        serializer = CourseSerializer(course, data=request.data, partial=True)
+        print(request.user.is_teacher)
+        if request.user.is_teacher == True:
+            serializer = CourseStatusTeacherSerializer(course,
+                                                       data=request.data,
+                                                       partial=True)
+        else:
+            serializer = CourseStatusSerializer(course,
+                                                data=request.data,
+                                                partial=True)
         serializer.is_valid(raise_exception=True)
         try:
             serializer.save()
