@@ -14,12 +14,12 @@ class CourseModel(models.Model):
 
     course_name = models.TextField()
     created_on = models.DateTimeField(default=timezone.now)
-    published_on = models.DateTimeField()
+    published_on = models.DateTimeField(null=True)
     course_status = models.CharField(choices=COURSE_STATUS,
                                      max_length=14,
                                      default='drafted')
-    total_videos = models.IntegerField()
-    total_duration = models.IntegerField()
+    total_videos = models.IntegerField(null=True)
+    total_duration = models.IntegerField(null=True)
     cover_image = models.URLField(blank=True, null=True)
     cover_image_public_id = models.TextField(blank=True, null=True)
     description = models.TextField(max_length=100)
@@ -66,4 +66,3 @@ class CourseEnrollmentModel(models.Model):
         """Unicode representation of CourseEnrollmentModel."""
         # return self.student.name
         pass
-

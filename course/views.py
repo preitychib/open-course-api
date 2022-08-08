@@ -93,6 +93,39 @@ class CourseListAPIView(generics.ListAPIView):
     ordering = '-created_on'
 
 
+@extend_schema_view(get=extend_schema(
+    request=CourseGetAllSerializer,
+    responses={
+        #? 200
+        status.HTTP_200_OK:
+        OpenApiResponse(
+            description='Course List',
+            response=CourseGetAllSerializer,
+        ),
+        #? 400
+        status.HTTP_400_BAD_REQUEST:
+        OpenApiResponse(
+            description='Bad Request',
+            response=OpenApiTypes.OBJECT,
+        ),
+    },
+))
+class CourseRequestedListAPIView(generics.ListAPIView):
+    '''
+        Allowed methods: GET
+       GET: Course List
+    
+       
+    '''
+    queryset = CourseModel.objects.filter(course_status='requested')
+    serializer_class = CourseGetAllSerializer
+    permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
+    pagination_class = StandardPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = 'created_on'
+    ordering = '-created_on'
+
+
 @extend_schema_view(
     get=extend_schema(
         description='Returns Single Course of given Id.\n\nargs: pk',
