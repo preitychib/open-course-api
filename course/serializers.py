@@ -17,7 +17,8 @@ class CourseGetAllSerializer(serializers.ModelSerializer):
         Full Serializer for course list
     '''
     teacher = UserSerializer()
-    category= CatergorySerializer()
+    category = CatergorySerializer()
+
     class Meta:
         model = CourseModel
         fields = '__all__'
@@ -52,7 +53,7 @@ class CourseUpdateSerializer(serializers.ModelSerializer):
         ]
 
 
-class CourseReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CourseReviewModel
@@ -68,7 +69,7 @@ class CourseNestedFullSerializer(serializers.ModelSerializer):
     '''
     teacher = UserSerializer()
     section = CourseSectionNestedSerializer(many=True)
-    review = CourseReviewSerializer(many=True)
+    review = ReviewSerializer(many=True)
 
     class Meta:
         model = CourseModel

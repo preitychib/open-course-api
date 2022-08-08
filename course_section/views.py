@@ -12,7 +12,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from category import serializers
 
-from .serializers import CourseSectionFullSerializer, CourseSectionSerializer
+from .serializers import CourseSectionFullSerializer, CourseSectionNestedSerializer, CourseSectionSerializer
 from .models import CourseSectionModel
 from user.permissions import UserIsAdmin, UserIsTeacher
 from api.paginator import StandardPagination
@@ -67,7 +67,7 @@ class CourseSectionCreateAPIView(generics.CreateAPIView):
 
 
 @extend_schema_view(get=extend_schema(
-    request=CourseSectionFullSerializer,
+    request=CourseSectionNestedSerializer,
     responses={
         #? 200
         status.HTTP_200_OK:
@@ -91,7 +91,7 @@ class CourseSectionListAPIView(generics.ListAPIView):
        
     '''
     queryset = CourseSectionModel.objects.all()
-    serializer_class = CourseSectionFullSerializer
+    serializer_class = CourseSectionNestedSerializer
     pagination_class = StandardPagination
     filter_backends = [OrderingFilter, DjangoFilterBackend]
     ordering_fields = 'created_on'
