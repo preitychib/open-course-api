@@ -1,20 +1,23 @@
+from unicodedata import category
 from rest_framework import serializers
 from course_section.serializers import CourseSectionNestedSerializer
 from .models import CourseModel, CourseEnrollmentModel
 from course_review.models import CourseReviewModel
 from user.models import UserModel
 from user.serializers import UserSerializer
-# from course_review.serializers import CourseReviewSerializer
+from category.serializers import CatergorySerializer
 
 #? =====================
 #? Course Serializers
 #? =====================
 
-class CourseFullSerializer(serializers.ModelSerializer):
+
+class CourseGetAllSerializer(serializers.ModelSerializer):
     '''
         Full Serializer for course
     '''
-
+    teacher = UserSerializer()
+    category= CatergorySerializer()
     class Meta:
         model = CourseModel
         fields = '__all__'
@@ -57,7 +60,8 @@ class CourseReviewSerializer(serializers.ModelSerializer):
             'created_on',
         ]
 
-class CourseNestedSerializer(serializers.ModelSerializer):
+
+class CourseNestedFullSerializer(serializers.ModelSerializer):
     '''
         Course Serializer to get Nested data 
         Return full data of course 
@@ -121,7 +125,7 @@ class CourseEnrollmentSerializer(serializers.ModelSerializer):
 
 
 class CourseEnrollmentNestedSerializer(serializers.ModelSerializer):
-    course = CourseNestedSerializer(many=True)
+    course = CourseNestedFullSerializer(many=True)
     student = UserSerializer(many=True)
 
     class Meta:

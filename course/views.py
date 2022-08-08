@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CourseFullSerializer, CourseNestedSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
+from .serializers import CourseGetAllSerializer, CourseNestedFullSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
 from .models import CourseModel
 from user.permissions import UserIsAdmin, UserIsTeacher
 from api.paginator import StandardPagination
@@ -62,13 +62,13 @@ class CourseCreateAPIView(generics.CreateAPIView):
 
 
 @extend_schema_view(get=extend_schema(
-    request=CourseFullSerializer,
+    request=CourseGetAllSerializer,
     responses={
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
             description='Course List',
-            response=CourseFullSerializer,
+            response=CourseGetAllSerializer,
         ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
@@ -86,7 +86,7 @@ class CourseListAPIView(generics.ListAPIView):
        
     '''
     queryset = CourseModel.objects.all()
-    serializer_class = CourseFullSerializer
+    serializer_class = CourseGetAllSerializer
     pagination_class = StandardPagination
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
@@ -101,7 +101,7 @@ class CourseListAPIView(generics.ListAPIView):
             status.HTTP_200_OK:
             OpenApiResponse(
                 description='User Details',
-                response=CourseNestedSerializer,
+                response=CourseNestedFullSerializer,
             ),
             #? 404
             status.HTTP_404_NOT_FOUND:
@@ -162,7 +162,7 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     #? get single Course
     def get(self, request, *args, **kwargs):
         course = self.get_object()
-        serializer = CourseNestedSerializer(course)
+        serializer = CourseNestedFullSerializer(course)
         return Response(serializer.data)
 
     #? Update a Course
