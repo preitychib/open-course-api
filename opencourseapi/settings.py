@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'category',
     'contact_us',
     'student_progress',
+    'course_review',
 ]
 
 MIDDLEWARE = [

@@ -1,13 +1,15 @@
 from rest_framework import serializers
 from course_section.serializers import CourseSectionNestedSerializer
-from .models import CourseModel, CourseEnrollmentModel, CourseReviewModel
+from .models import CourseModel, CourseEnrollmentModel
+from course_review.models import CourseReviewModel
 from user.models import UserModel
 from user.serializers import UserSerializer
-
+# from course_review.serializers import CourseReviewSerializer
 
 #? =====================
 #? Course Serializers
 #? =====================
+
 class CourseFullSerializer(serializers.ModelSerializer):
     '''
         Full Serializer for course
@@ -47,6 +49,14 @@ class CourseUpdateSerializer(serializers.ModelSerializer):
         ]
 
 
+class CourseReviewSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseReviewModel
+        exclude = [
+            'created_on',
+        ]
+
 class CourseNestedSerializer(serializers.ModelSerializer):
     '''
         Course Serializer to get Nested data 
@@ -54,6 +64,7 @@ class CourseNestedSerializer(serializers.ModelSerializer):
     '''
     teacher = UserSerializer()
     section = CourseSectionNestedSerializer(many=True)
+    review = CourseReviewSerializer(many=True)
 
     class Meta:
         model = CourseModel
@@ -92,29 +103,6 @@ class CourseStatusTeacherSerializer(serializers.ModelSerializer):
         fields = [
             'course_status',
         ]
-
-
-#? =========================
-#? Course Review Serializers
-#? =========================
-
-
-class CourseReviewSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = CourseReviewModel
-        exclude = [
-            'created_on',
-        ]
-
-
-class CourseReviewNestedSerializer(serializers.ModelSerializer):
-    course = CourseSerializer(many=True)
-    student = UserSerializer(many=True)
-
-    class Meta:
-        model = CourseReviewModel
-        fields = '__all__'
 
 
 #? =============================

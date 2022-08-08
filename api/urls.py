@@ -18,7 +18,7 @@ from course import views as CourseViews
 
 from course import course_enrollment_views as CourseEnrollViews
 
-from course import course_review_views as CourseReviewViews
+from course_review import views as CourseReviewViews
 
 from course_video import views as CourseVideoViews
 
