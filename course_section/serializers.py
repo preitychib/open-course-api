@@ -16,6 +16,7 @@ class CourseSectionSerializer(serializers.ModelSerializer):
         model = CourseSectionModel
         exclude = [
             'created_on',
+            
         ]
 
 

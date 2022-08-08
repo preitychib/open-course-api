@@ -8,6 +8,10 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
+from django_filters.rest_framework import DjangoFilterBackend
+
+from category import serializers
+
 from .serializers import CourseSectionFullSerializer, CourseSectionSerializer
 from .models import CourseSectionModel
 from user.permissions import UserIsAdmin, UserIsTeacher
@@ -89,9 +93,19 @@ class CourseSectionListAPIView(generics.ListAPIView):
     queryset = CourseSectionModel.objects.all()
     serializer_class = CourseSectionFullSerializer
     pagination_class = StandardPagination
-    filter_backends = [OrderingFilter]
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
     ordering_fields = 'created_on'
     ordering = '-created_on'
+    filterset_fields = ['course']
+
+    # def list(self, request, *args, **kwargs):
+    #     print(kwargs['course'])
+    #     course_id = kwargs['course']
+    #     courses = CourseSectionModel.objects.filter(course=course_id)
+    #     courses = OrderedDict()
+    #     print(courses.values)
+    #     serializer = self.get_serializer(courses)
+    #     return Response(serializer.data)
 
 
 @extend_schema_view(patch=extend_schema(

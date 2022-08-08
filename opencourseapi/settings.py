@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'cloudinary',
+    'django_filters',
 
     #? Custom apps
     'api',
@@ -352,6 +353,12 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': (
     #     'rest_framework.permissions.IsAuthenticated',
     # ),
+
+    # ? Django Filters
+    # 'DEFAULT_FILTER_BACKENDS':
+    # ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS':
+    ('django_filters.rest_framework.DjangoFilterBackend', ),
 
     #TODO: Pagination Config
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
