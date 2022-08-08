@@ -14,7 +14,7 @@ from category.serializers import CatergorySerializer
 
 class CourseGetAllSerializer(serializers.ModelSerializer):
     '''
-        Full Serializer for course
+        Full Serializer for course list
     '''
     teacher = UserSerializer()
     category= CatergorySerializer()
