@@ -130,7 +130,7 @@ class CourseVideoUpdateDeleteAPIView(generics.GenericAPIView):
                                            data=request.data,
                                            partial=True)
         serializer.is_valid(raise_exception=True)
-        print(course_video.section.course.teacher.id)
+        
         try:
 
             if request.user.is_admin or (

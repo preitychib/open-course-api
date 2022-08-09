@@ -89,10 +89,7 @@ class CourseReviewListAPIView(generics.ListAPIView):
 
     queryset = CourseReviewModel.objects.all()
     serializer_class = CourseReviewNestedSerializer
-    permission_classes = [
-        permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
-    ]
-    # Todo: Add another custom permission
+    permission_classes = [permissions.IsAuthenticated]
     pagination_class = StandardPagination
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
