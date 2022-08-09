@@ -56,9 +56,10 @@ class VideoUploadAPIView(generics.CreateAPIView):
 
         try:
             #? upload image to cloudinary
-            print(request.data)
+
             uploaded_video = cloudinary.uploader.upload_large(
                 instance.validated_data['video'],
+                resource_type="video",
                 folder=instance.validated_data['folder'],
             )
 

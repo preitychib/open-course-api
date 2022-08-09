@@ -89,6 +89,7 @@ class CourseListAPIView(generics.ListAPIView):
     
        
     '''
+    # Todo permissions
     queryset = CourseModel.objects.all()
     serializer_class = CourseGetAllSerializer
     # permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]

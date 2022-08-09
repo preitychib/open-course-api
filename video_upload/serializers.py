@@ -1,5 +1,5 @@
 from rest_framework import serializers
-#? max size 10 mb
+#? max size 100 mb
 MAX_UPLOAD_SIZE = 104857600
 
 
@@ -18,7 +18,7 @@ class VideoUploadSerializer(serializers.Serializer):
             Validates if its a valid image
             Validates if its of a valid size
         '''
-        
+
         if not value:
             raise serializers.ValidationError('No video provided.')
 
