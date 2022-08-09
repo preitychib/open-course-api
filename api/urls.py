@@ -138,7 +138,7 @@ urlpatterns = [
     path('course-review/',
          CourseReviewViews.CourseReviewCreateAPIView.as_view(),
          name='course-review-create'),
-    path('course-review/all/<int:course_id>',
+    path('course-review/all/',
          CourseReviewViews.CourseReviewListAPIView.as_view(),
          name='course-review-list'),
     path('course-review/<int:pk>/',

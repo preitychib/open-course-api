@@ -8,6 +8,8 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .serializers import CourseReviewSerializer, CourseReviewNestedSerializer
 from .models import CourseReviewModel
 from user.permissions import UserIsAdmin, UserIsStudent
@@ -91,7 +93,8 @@ class CourseReviewListAPIView(generics.ListAPIView):
     serializer_class = CourseReviewNestedSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = StandardPagination
-    filter_backends = [OrderingFilter]
+    filter_backends = [OrderingFilter, DjangoFilterBackend]
+    filterset_fields = ['course']
     ordering_fields = 'created_on'
     ordering = '-created_on'
 
