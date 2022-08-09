@@ -10,7 +10,7 @@ from rest_framework.filters import OrderingFilter
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import CourseEnrollmentSerializer, CourseEnrollmentNestedSerializer, CourseEnrollmentFullSerializer, CourseFullSerializer
+from .serializers import CourseEnrollmentSerializer, CourseEnrollmentStudentSerializer, CourseEnrollmentTeacherSerializer
 from .models import CourseEnrollmentModel
 from user.permissions import UserIsAdmin, UserIsTeacher, UserIsStudent
 from api.paginator import StandardPagination
@@ -66,13 +66,13 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
 
 
 @extend_schema_view(get=extend_schema(
-    request=CourseFullSerializer,
+    request=CourseEnrollmentStudentSerializer,
     responses={
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
             description='Course Enrollment List of Current Student',
-            response=CourseEnrollmentNestedSerializer,
+            response=CourseEnrollmentStudentSerializer,
         ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
@@ -89,7 +89,7 @@ class CourseStudentEnrollmentsListAPIView(generics.ListAPIView):
         Access: Admin,Student
        
     '''
-    serializer_class = CourseEnrollmentFullSerializer
+    serializer_class = CourseEnrollmentStudentSerializer
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
     ]
@@ -97,10 +97,49 @@ class CourseStudentEnrollmentsListAPIView(generics.ListAPIView):
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
-    filter_backends = [OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ['course']
+    filter_backends = [OrderingFilter]
 
     def get_queryset(self):
         queryset = CourseEnrollmentModel.objects.filter(
             student=self.request.user)
+        return queryset
+
+
+@extend_schema_view(get=extend_schema(
+    request=CourseEnrollmentTeacherSerializer,
+    responses={
+        #? 200
+        status.HTTP_200_OK:
+        OpenApiResponse(
+            description='Course Enrollment List of Current Student',
+            response=CourseEnrollmentTeacherSerializer,
+        ),
+        #? 400
+        status.HTTP_400_BAD_REQUEST:
+        OpenApiResponse(
+            description='Bad Request',
+            response=OpenApiTypes.OBJECT,
+        ),
+    },
+))
+class CourseTeacherEnrollmentsListAPIView(generics.ListAPIView):
+    '''
+        Allowed methods: GET
+        GET: Course List
+        Access: Admin,Teacher
+       
+    '''
+    serializer_class = CourseEnrollmentTeacherSerializer
+    permission_classes = [
+        permissions.IsAuthenticated & (UserIsAdmin | UserIsTeacher)
+    ]
+    pagination_class = StandardPagination
+    filter_backends = [OrderingFilter]
+    ordering_fields = 'created_on'
+    ordering = '-created_on'
+    filter_backends = [OrderingFilter]
+
+    def get_queryset(self):
+        queryset = CourseEnrollmentModel.objects.filter(
+            course=self.kwargs['course'])
         return queryset

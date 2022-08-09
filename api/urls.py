@@ -132,7 +132,10 @@ urlpatterns = [
          name='course-enroll-create'),
     path('course-enroll/current-student-all/',
          CourseEnrollViews.CourseStudentEnrollmentsListAPIView.as_view(),
-         name='course-enroll-list'),
+         name='course-enroll-current-student-list'),
+    path('course-enroll/all/<int:course>/',
+         CourseEnrollViews.CourseTeacherEnrollmentsListAPIView.as_view(),
+         name='course-enroll-course-id-list'),
 
     #? Course Review
     path('course-review/',

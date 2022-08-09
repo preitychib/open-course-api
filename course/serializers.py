@@ -122,7 +122,7 @@ class CourseStatusTeacherSerializer(serializers.ModelSerializer):
 #? =============================
 
 
-class CourseEnrollmentFullSerializer(serializers.ModelSerializer):
+class CourseEnrollmentStudentSerializer(serializers.ModelSerializer):
     course = CourseFullSerializer(many=True)
 
     class Meta:
@@ -140,8 +140,7 @@ class CourseEnrollmentSerializer(serializers.ModelSerializer):
         ]
 
 
-class CourseEnrollmentNestedSerializer(serializers.ModelSerializer):
-    course = CourseNestedFullSerializer(many=True)
+class CourseEnrollmentTeacherSerializer(serializers.ModelSerializer):
     student = UserSerializer(many=True)
 
     class Meta:
