@@ -7,7 +7,7 @@ class ContactUsModel(models.Model):
 
     name = models.TextField()
     email = models.EmailField()
-    message = models.TextField(max_length=20)
+    message = models.TextField(max_length=300)
     created_on = models.DateTimeField(default=timezone.now)
 
     class Meta:

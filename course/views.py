@@ -107,7 +107,7 @@ class CourseListAPIView(generics.ListAPIView):
         status.HTTP_200_OK:
         OpenApiResponse(
             description=
-            'Allowed methods: GET\n\nAccess: Teacher \n\nGET: Course List owned by teacher',
+            'Allowed methods: GET\n\nAccess: Teacher,Admin \n\nGET: Course List owned by teacher',
             response=CourseGetAllSerializer,
         ),
         #? 400
@@ -121,7 +121,7 @@ class CourseListAPIView(generics.ListAPIView):
 class CourseListTeacherAPIView(generics.ListAPIView):
     '''
         Allowed methods: GET
-        Access: Teacher 
+        Access: Teacher, Admin
         GET: Course List owned by teacher
         
         
