@@ -106,7 +106,8 @@ class CourseListAPIView(generics.ListAPIView):
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
-            description='Course List',
+            description=
+            'Allowed methods: GET\n\nAccess: Teacher \n\nGET: Course List owned by teacher',
             response=CourseGetAllSerializer,
         ),
         #? 400
@@ -120,30 +121,23 @@ class CourseListAPIView(generics.ListAPIView):
 class CourseListTeacherAPIView(generics.ListAPIView):
     '''
         Allowed methods: GET
-       GET: Course List
-       Access: Teacher 
-    
-       
-    '''
-
-    # def get_queryset(self):
-    #     CourseModel.objects.filter(teacher=self.request.user)
-    #     return super().get_queryset()
-    # # Todo pagiantion
-    queryset = CourseModel.objects.all()
+        Access: Teacher 
+        GET: Course List owned by teacher
+        
+        
+        '''
     serializer_class = CourseNestedFullSerializer
-    permission_classes = [permissions.IsAuthenticated & (UserIsTeacher)]
+    permission_classes = [
+        permissions.IsAuthenticated & (UserIsTeacher or UserIsAdmin)
+    ]
     pagination_class = StandardPagination
-    filter_backends = [OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ['category']
+    filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
 
-    def get(self, request):
-        queryset = CourseModel.objects.filter(teacher=request.user)
-        serializer = CourseNestedFullSerializer(queryset, many=True)
-
-        return Response(serializer.data)
+    def get_queryset(self):
+        queryset = CourseModel.objects.filter(teacher=self.request.user)
+        return queryset
 
 
 @extend_schema_view(get=extend_schema(
