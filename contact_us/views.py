@@ -134,6 +134,12 @@ class ContactUsAdminUpdateDeleteAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
     lookup_field = 'pk'
 
+    # ? Get Contact us message by id
+    def get(self, request, *args, **kwargs):
+        contact = self.get_object()
+        serializer = ContactUsSerializer(contact)
+        return Response(serializer.data)
+
     #? Update a Contact Us message
     def patch(self, request, *args, **kwargs):
         contact = self.get_object()
@@ -154,7 +160,7 @@ class ContactUsAdminUpdateDeleteAPIView(generics.GenericAPIView):
 
         return Response(response, status=status.HTTP_201_CREATED)
 
-    #? Delete a Course
+    #? Delete a contact us
     def delete(self, request, *args, **kwargs):
         contact = self.get_object()
         try:
