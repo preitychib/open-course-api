@@ -134,7 +134,7 @@ class CourseRequestedListAPIView(generics.ListAPIView):
 @extend_schema_view(
     get=extend_schema(
         description=
-        'Returns Single Course of given Id.\n\nargs: pk\n\n Access: Everyone\n\nNote: For Admin and Teacher the response contains video links\n\n For others the response does not contain video links',
+        'Returns Single Course of given Id.\n\nargs: pk\n\n Access: Everyone\n\nNote: For Admin and Teacher who owns the course the response contains video links\n\n For others the response does not contain video links',
         responses={
             #? 200
             status.HTTP_200_OK:
@@ -188,7 +188,7 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
         GET: Course by ID
         PATCH: Update a Course 
         DELETE: Delete a Course 
-        Access: Admin, Teacher
+        Access: Admin, Teacher who owns the course
        
     '''
     queryset = CourseModel.objects.all()
@@ -202,8 +202,6 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         course = self.get_object()
-        print(course.teacher.id)
-        print(request.user.id)
         if request.user.is_authenticated and (
                 request.user.is_admin or course.teacher.id == request.user.id):
             serializer = CourseNestedFullSerializer(course)
@@ -219,8 +217,10 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
 
         try:
 
-            if request.user.is_admin or (request.user.is_teacher and
-                                         course.course_status == 'drafted'):
+            if request.user.is_admin or (request.user.is_teacher
+                                         and course.course_status == 'drafted'
+                                         and course.teacher.id
+                                         == request.user.id):
 
                 serializer.save()
             else:
@@ -247,8 +247,10 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
         course = self.get_object()
         try:
 
-            if request.user.is_admin or (request.user.is_teacher and
-                                         course.course_status == 'drafted'):
+            if request.user.is_admin or (request.user.is_teacher
+                                         and course.course_status == 'drafted'
+                                         and course.teacher.id
+                                         == request.user.id):
 
                 course.delete()
             else:
