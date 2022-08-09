@@ -49,6 +49,7 @@ class CourseCreateAPIView(generics.CreateAPIView):
     #? Create a new Course
     def post(self, request, *args, **kwargs):
         serializer = CourseSerializer(data=request.data)
+
         serializer.is_valid(raise_exception=True)
         try:
             serializer.save()
@@ -201,7 +202,10 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         course = self.get_object()
-        if request.user.is_authenticated and request.user.is_student != True:
+        print(course.teacher.id)
+        print(request.user.id)
+        if request.user.is_authenticated and (
+                request.user.is_admin or course.teacher.id == request.user.id):
             serializer = CourseNestedFullSerializer(course)
         else:
             serializer = CourseGetAllSerializer(course)
@@ -212,8 +216,21 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
         course = self.get_object()
         serializer = CourseSerializer(course, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
+
         try:
-            serializer.save()
+
+            if request.user.is_admin or (request.user.is_teacher and
+                                         course.course_status == 'drafted'):
+
+                serializer.save()
+            else:
+                return Response(
+                    {
+                        'detail':
+                        'You Do not have the permission to Update the course details'
+                    },
+                    status=status.HTTP_403_FORBIDDEN)
+
         except Exception as ex:
             logger.error(str(ex))
 
@@ -229,7 +246,18 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     def delete(self, request, *args, **kwargs):
         course = self.get_object()
         try:
-            course.delete()
+
+            if request.user.is_admin or (request.user.is_teacher and
+                                         course.course_status == 'drafted'):
+
+                course.delete()
+            else:
+                return Response(
+                    {
+                        'detail':
+                        'You Do not have the permission to delete the course'
+                    },
+                    status=status.HTTP_403_FORBIDDEN)
         except Exception as ex:
             logger.error(str(ex))
 

@@ -6,6 +6,10 @@ from drf_spectacular.types import OpenApiTypes
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
+from django_filters.rest_framework import DjangoFilterBackend
+
+import course_video
+
 from .serializers import StudentProgressSerializer, StudentProgressPostSerializer
 from .models import StudentProgressModel
 from user.permissions import UserIsAdmin, UserIsStudent
@@ -116,9 +120,11 @@ class StudentProgressRetrieveUpdateAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated & UserIsStudent]
     lookup_field = 'pk'
 
-    #? get single User
+    # def get_object(self):
+    #     progress=StudentProgressModel.objects.filter(student=self.request.user.id,course=kwargs['course'])
+    #     return super().get_object()
+    #? get student progess
     def get(self, request, *args, **kwargs):
-
         progress = self.get_object()
         serializer = StudentProgressSerializer(progress)
         return Response(serializer.data)
