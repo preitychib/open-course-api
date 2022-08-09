@@ -10,7 +10,7 @@ from rest_framework.filters import OrderingFilter
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import CourseEnrollmentSerializer, CourseEnrollmentNestedSerializer
+from .serializers import CourseEnrollmentSerializer, CourseEnrollmentNestedSerializer, CourseEnrollmentFullSerializer, CourseFullSerializer
 from .models import CourseEnrollmentModel
 from user.permissions import UserIsAdmin, UserIsTeacher, UserIsStudent
 from api.paginator import StandardPagination
@@ -66,12 +66,12 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
 
 
 @extend_schema_view(get=extend_schema(
-    request=CourseEnrollmentNestedSerializer,
+    request=CourseFullSerializer,
     responses={
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
-            description='Course Enrollment List',
+            description='Course Enrollment List of Current Student',
             response=CourseEnrollmentNestedSerializer,
         ),
         #? 400
@@ -82,23 +82,25 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
         ),
     },
 ))
-class CourseEnrollmentListAPIView(generics.ListAPIView):
+class CourseStudentEnrollmentsListAPIView(generics.ListAPIView):
     '''
         Allowed methods: GET
         GET: Course List
         Access: Admin,Student
        
     '''
-
-    queryset = CourseEnrollmentModel.objects.all()
-    serializer_class = CourseEnrollmentNestedSerializer
+    serializer_class = CourseEnrollmentFullSerializer
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
     ]
-    # Todo: Add another custom permission
     pagination_class = StandardPagination
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
     filter_backends = [OrderingFilter, DjangoFilterBackend]
     filterset_fields = ['course']
+
+    def get_queryset(self):
+        queryset = CourseEnrollmentModel.objects.filter(
+            student=self.request.user)
+        return queryset

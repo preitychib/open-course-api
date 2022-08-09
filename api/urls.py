@@ -130,8 +130,8 @@ urlpatterns = [
     path('course-enroll/',
          CourseEnrollViews.CourseEnrollmentCreateAPIView.as_view(),
          name='course-enroll-create'),
-    path('course-enroll/all/',
-         CourseEnrollViews.CourseEnrollmentListAPIView.as_view(),
+    path('course-enroll/current-student-all/',
+         CourseEnrollViews.CourseStudentEnrollmentsListAPIView.as_view(),
          name='course-enroll-list'),
 
     #? Course Review

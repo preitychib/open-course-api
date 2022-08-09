@@ -12,6 +12,13 @@ from category.serializers import CatergorySerializer
 #? =====================
 
 
+class CourseFullSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseModel
+        fields = '__all__'
+
+
 class CourseGetAllSerializer(serializers.ModelSerializer):
     '''
         Full Serializer for course list
@@ -113,6 +120,14 @@ class CourseStatusTeacherSerializer(serializers.ModelSerializer):
 #? =============================
 #? Course Enrollment Serializers
 #? =============================
+
+
+class CourseEnrollmentFullSerializer(serializers.ModelSerializer):
+    course = CourseFullSerializer(many=True)
+
+    class Meta:
+        model = CourseEnrollmentModel
+        fields = '__all__'
 
 
 class CourseEnrollmentSerializer(serializers.ModelSerializer):

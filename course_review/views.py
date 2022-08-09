@@ -95,8 +95,7 @@ class CourseReviewListAPIView(generics.ListAPIView):
     serializer_class = CourseReviewNestedSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = StandardPagination
-    filter_backends = [OrderingFilter, DjangoFilterBackend]
-    filterset_fields = ['course']
+    filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
 
