@@ -4,6 +4,8 @@ from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_
 from drf_spectacular.types import OpenApiTypes
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+
+import course
 from .serializers import CourseVideoFullSerializer, CourseVideoSerializer
 from .models import CourseVideoModel
 from user.permissions import UserIsAdmin, UserIsTeacher
@@ -123,13 +125,26 @@ class CourseVideoUpdateDeleteAPIView(generics.GenericAPIView):
 
     #? Update a Course Video
     def patch(self, request, *args, **kwargs):
-        category = self.get_object()
-        serializer = CourseVideoSerializer(category,
+        course_video = self.get_object()
+        serializer = CourseVideoSerializer(course_video,
                                            data=request.data,
                                            partial=True)
         serializer.is_valid(raise_exception=True)
+        print(course_video.section.course.teacher.id)
         try:
-            serializer.save()
+
+            if request.user.is_admin or (
+                    request.user.is_teacher and
+                    course_video.section.course.course_status == 'drafted' and
+                    course_video.section.course.teacher.id == request.user.id):
+                serializer.save()
+            else:
+                return Response(
+                    {
+                        'detail':
+                        'You Do not have the permission to Update the course section details'
+                    },
+                    status=status.HTTP_403_FORBIDDEN)
         except Exception as ex:
             logger.error(str(ex))
 
@@ -143,9 +158,22 @@ class CourseVideoUpdateDeleteAPIView(generics.GenericAPIView):
 
     #? Delete a Course Video
     def delete(self, request, *args, **kwargs):
-        category = self.get_object()
+        course_video = self.get_object()
         try:
-            category.delete()
+            if request.user.is_admin or (
+                    request.user.is_teacher and
+                    course_video.section.course.course_status == 'drafted' and
+                    course_video.section.course.teacher.id == request.user.id):
+
+                course_video.delete()
+
+            else:
+                return Response(
+                    {
+                        'detail':
+                        'You Do not have the permission to Update the course section details'
+                    },
+                    status=status.HTTP_403_FORBIDDEN)
         except Exception as ex:
             logger.error(str(ex))
 

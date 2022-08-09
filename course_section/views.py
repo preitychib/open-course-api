@@ -52,7 +52,9 @@ class CourseSectionCreateAPIView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = CourseSectionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
         try:
+
             serializer.save()
         except Exception as ex:
             logger.error(str(ex))
@@ -159,7 +161,18 @@ class CourseSectionUpdateDeleteAPIView(generics.GenericAPIView):
                                              partial=True)
         serializer.is_valid(raise_exception=True)
         try:
-            serializer.save()
+            if request.user.is_admin or (
+                    request.user.is_teacher
+                    and course_section.course.course_status == 'drafted'
+                    and course_section.course.teacher.id == request.user.id):
+                serializer.save()
+            else:
+                return Response(
+                    {
+                        'detail':
+                        'You Do not have the permission to Update the course section details'
+                    },
+                    status=status.HTTP_403_FORBIDDEN)
         except Exception as ex:
             logger.error(str(ex))
 
@@ -171,11 +184,22 @@ class CourseSectionUpdateDeleteAPIView(generics.GenericAPIView):
 
         return Response(response, status=status.HTTP_201_CREATED)
 
-    #? Delete a Category
+    #? Delete a course Section
     def delete(self, request, *args, **kwargs):
         course_section = self.get_object()
         try:
-            course_section.delete()
+            if request.user.is_admin or (
+                    request.user.is_teacher
+                    and course_section.course.course_status == 'drafted'
+                    and course_section.course.teacher.id == request.user.id):
+                course_section.delete()
+            else:
+                return Response(
+                    {
+                        'detail':
+                        'You Do not have the permission to delete the course section'
+                    },
+                    status=status.HTTP_403_FORBIDDEN)
         except Exception as ex:
             logger.error(str(ex))
 
