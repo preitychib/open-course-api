@@ -8,6 +8,12 @@ class StudentProgressModel(models.Model):
     """Model definition for StudentProgressModel."""
     course = models.ManyToManyField(CourseModel)
     student = models.ManyToManyField(UserModel)
+    # course = models.ForeignKey(CourseModel,
+    #                            related_name='course_progress',
+    #                            on_delete=models.CASCADE)
+    # student = models.ForeignKey(UserModel,
+    #                             related_name='student_progress',
+    #                             on_delete=models.CASCADE)
     meta_data = models.JSONField(blank=True, null=True)
     created_on = models.DateTimeField(default=timezone.now)
 

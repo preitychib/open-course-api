@@ -24,4 +24,6 @@ class StudentProgressSerializer(serializers.ModelSerializer):
         model = StudentProgressModel
         exclude = [
             'created_on',
+            'student',
+            'course',
         ]

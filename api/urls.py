@@ -163,7 +163,8 @@ urlpatterns = [
     path('student-progress/',
          StudProgressViews.StudentProgressCreateAPIView.as_view(),
          name='student-progress-create'),
-    path('student-progress/<int:pk>/',
-         StudProgressViews.StudentProgressRetrieveUpdateAPIView.as_view(),
+    path('student-progress/<int:course>/',
+         StudProgressViews.StudentProgressUpdateAPIView.as_view(),
          name='student-progress-retrive-update'),
+   
 ]

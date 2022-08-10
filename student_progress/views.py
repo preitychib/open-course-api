@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-import course_video
+from django.http import Http404
 
 from .serializers import StudentProgressSerializer, StudentProgressPostSerializer
 from .models import StudentProgressModel
@@ -62,12 +62,14 @@ class StudentProgressCreateAPIView(generics.CreateAPIView):
 
 @extend_schema_view(
     get=extend_schema(
-        description='Return Progress of  Student\n\nargs: pk',
+        description=
+        'Return Progress of Course of Current Student\n\nargs: Course pk',
         responses={
             #? 200
             status.HTTP_200_OK:
             OpenApiResponse(
-                description='Return Progress of  Student\n\nargs: pk',
+                description=
+                'Return Progress of Course of Current Student\n\nargs: Course pk',
                 response=StudentProgressSerializer,
             ),
             #? 404
@@ -85,7 +87,8 @@ class StudentProgressCreateAPIView(generics.CreateAPIView):
         }),
     patch=extend_schema(
         request=StudentProgressSerializer,
-        description='Updates the Student Progress of  Student.\n\nargs: pk',
+        description=
+        'Updates the Student Progress of Current Student in a given Course.\n\nargs: pk',
         responses={
             #? 200
             status.HTTP_200_OK:
@@ -105,9 +108,9 @@ class StudentProgressCreateAPIView(generics.CreateAPIView):
             ),
         }),
 )
-class StudentProgressRetrieveUpdateAPIView(generics.GenericAPIView):
+class StudentProgressUpdateAPIView(generics.GenericAPIView):
     '''
-        Allowed methods: GET, PATCH
+        Allowed methods: PATCH
         GET: Return Progress of  Student
         PATCH: Updates the Student Progress of  Student.
         Note: Updatation on Student Progress is done via Partial Update method
@@ -120,9 +123,13 @@ class StudentProgressRetrieveUpdateAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated & UserIsStudent]
     lookup_field = 'pk'
 
-    # def get_object(self):
-    #     progress=StudentProgressModel.objects.filter(student=self.request.user.id,course=kwargs['course'])
-    #     return super().get_object()
+    def get_object(self):
+        try:
+            return StudentProgressModel.objects.get(
+                student=self.request.user.id, course=self.kwargs['course'])
+        except StudentProgressModel.DoesNotExist:
+            raise Http404
+
     #? get student progess
     def get(self, request, *args, **kwargs):
         progress = self.get_object()

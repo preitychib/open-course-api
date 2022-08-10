@@ -168,18 +168,16 @@ class CourseReviewUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     '''
     queryset = CourseReviewModel.objects.all()
     serializer_class = CourseReviewNestedSerializer
-    permission_classes = [
-        permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
-    ]
+    permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'pk'
 
-    #? get single Course
+    #? get single Course Review
     def get(self, request, *args, **kwargs):
         review = self.get_object()
         serializer = CourseReviewNestedSerializer(review)
         return Response(serializer.data)
 
-    #? Update a Course
+    #? Update a Course Review
     def patch(self, request, *args, **kwargs):
         review = self.get_object()
         serializer = CourseReviewSerializer(review,
@@ -199,7 +197,7 @@ class CourseReviewUpdateRetriveDeleteAPIView(generics.GenericAPIView):
 
         return Response(response, status=status.HTTP_201_CREATED)
 
-    #? Delete a Course
+    #? Delete a Course Review
     def delete(self, request, *args, **kwargs):
         review = self.get_object()
         try:
