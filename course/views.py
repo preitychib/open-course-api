@@ -8,8 +8,6 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-
-
 from .serializers import CourseFullSerializer, CourseGetAllSerializer, CourseNestedFullSerializer, CoursePublicSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -93,7 +91,7 @@ class CourseListAPIView(generics.ListAPIView):
     # Todo permissions
     queryset = CourseModel.objects.all()
     serializer_class = CourseGetAllSerializer
-    # permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
+    permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
     pagination_class = StandardPagination
     filter_backends = [OrderingFilter, DjangoFilterBackend]
     filterset_fields = ['category']
@@ -280,8 +278,15 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
         if request.user.is_authenticated and (
                 request.user.is_admin or course.teacher.id == request.user.id):
             serializer = CourseNestedFullSerializer(course)
+        elif course.course_status == 'published':
+            serializer = CoursePublicSerializer(course)
         else:
-            serializer = CourseGetAllSerializer(course)
+            return Response(
+                {
+                    'detail':
+                    'You Do not have the permission to access the course details'
+                },
+                status=status.HTTP_403_FORBIDDEN)
         return Response(serializer.data)
 
     #? Update a Course

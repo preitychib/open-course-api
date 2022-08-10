@@ -20,3 +20,15 @@ class CourseVideoSerializer(serializers.ModelSerializer):
         exclude = [
             'created_on',
         ]
+
+
+class CourseVideoPublicSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseVideoModel
+        exclude = [
+            'created_on',
+            'video_link',
+            'video_link_public_id',
+            'duration',
+        ]

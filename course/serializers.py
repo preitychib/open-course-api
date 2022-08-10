@@ -1,6 +1,5 @@
-
 from rest_framework import serializers
-from course_section.serializers import CourseSectionNestedSerializer
+from course_section.serializers import CourseSectionNestedPublicSerializer, CourseSectionNestedSerializer
 from .models import CourseModel, CourseEnrollmentModel
 from course_review.models import CourseReviewModel
 from user.models import UserModel
@@ -20,6 +19,9 @@ class CourseFullSerializer(serializers.ModelSerializer):
 
 
 class CoursePublicSerializer(serializers.ModelSerializer):
+    teacher = UserSerializer()
+    category = CatergorySerializer()
+    section = CourseSectionNestedPublicSerializer(many=True)
 
     class Meta:
         model = CourseModel
