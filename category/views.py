@@ -85,10 +85,15 @@ class CategoryListAPIView(generics.ListAPIView):
     '''
     queryset = CategoryModel.objects.all()
     serializer_class = CatergoryFullSerializer
-    pagination_class = StandardPagination
-    filter_backends = [OrderingFilter]
-    ordering_fields = 'created_on'
-    ordering = '-created_on'
+    # pagination_class = StandardPagination
+    # filter_backends = [OrderingFilter]
+    # ordering_fields = 'created_on'
+    # ordering = '-created_on'
+
+    def get(self, request):
+        queryset = CategoryModel.objects.all().values()
+
+        return Response({'results': list(queryset)})
 
 
 @extend_schema_view(patch=extend_schema(

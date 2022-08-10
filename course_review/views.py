@@ -72,7 +72,7 @@ class CourseReviewCreateAPIView(generics.CreateAPIView):
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
-            description='Course Review List',
+            description='Course Review List by Course Id',
             response=CourseReviewNestedSerializer,
         ),
         #? 400
@@ -86,8 +86,8 @@ class CourseReviewCreateAPIView(generics.CreateAPIView):
 class CourseReviewListAPIView(generics.ListAPIView):
     '''
         Allowed methods: GET
-        GET: Course List
-        Access: Admin,Student
+        GET: Course Review List by course id
+        Access: Authenticated Users
        
     '''
 
@@ -185,6 +185,15 @@ class CourseReviewUpdateRetriveDeleteAPIView(generics.GenericAPIView):
                                             partial=True)
         serializer.is_valid(raise_exception=True)
         try:
+            if request.user.is_teacher or (
+                    request.user.is_student
+                    and request.user.id != review.student.id):
+                return Response(
+                    {
+                        'detail':
+                        'You Do not have the permission to Update the course review details'
+                    },
+                    status=status.HTTP_403_FORBIDDEN)
             serializer.save()
         except Exception as ex:
             logger.error(str(ex))
@@ -201,6 +210,15 @@ class CourseReviewUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     def delete(self, request, *args, **kwargs):
         review = self.get_object()
         try:
+            if request.user.is_teacher or (
+                    request.user.is_student
+                    and request.user.id != review.student.id):
+                return Response(
+                    {
+                        'detail':
+                        'You Do not have the permission to delete the course review'
+                    },
+                    status=status.HTTP_403_FORBIDDEN)
             review.delete()
         except Exception as ex:
             logger.error(str(ex))
