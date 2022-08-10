@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import StudentProgressModel
 from user.models import UserModel
-from course.models import CourseModel
+from course.models import CourseModel, CourseEnrollmentModel
 
 
 class StudentProgressPostSerializer(serializers.ModelSerializer):
@@ -16,6 +16,21 @@ class StudentProgressPostSerializer(serializers.ModelSerializer):
         exclude = [
             'created_on',
         ]
+
+    def validate(self, data):
+
+        if not (CourseEnrollmentModel.objects.filter(
+                student=data['student'][0],
+                course=data['course'][0]).exists()):
+            raise serializers.ValidationError(
+                'You need to enroll in the course first')
+
+        if StudentProgressModel.objects.filter(
+                student=data['student'][0], course=data['course'][0]).exists():
+            raise serializers.ValidationError(
+                'You can not add multiple progress of same course')
+
+        return data
 
 
 class StudentProgressSerializer(serializers.ModelSerializer):

@@ -44,7 +44,7 @@ class StudentProgressCreateAPIView(generics.CreateAPIView):
 
     #? Adds Student Progress
     def post(self, request, *args, **kwargs):
-        serializer = StudentProgressSerializer(data=request.data)
+        serializer = StudentProgressPostSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
             serializer.save()
