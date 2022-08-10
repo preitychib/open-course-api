@@ -147,7 +147,15 @@ class CourseEnrollmentSerializer(serializers.ModelSerializer):
         model = CourseEnrollmentModel
         exclude = [
             'created_on',
-            
+        ]
+
+
+class CourseEnrollmentStudentUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseEnrollmentModel
+        fields = [
+            'meta_data',
         ]
 
 

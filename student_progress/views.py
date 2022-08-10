@@ -108,7 +108,7 @@ class StudentProgressCreateAPIView(generics.CreateAPIView):
             ),
         }),
 )
-class StudentProgressUpdateAPIView(generics.GenericAPIView):
+class StudentProgressRetriveUpdateAPIView(generics.GenericAPIView):
     '''
         Allowed methods: PATCH
         GET: Return Progress of  Student

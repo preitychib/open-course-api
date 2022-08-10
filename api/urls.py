@@ -139,6 +139,10 @@ urlpatterns = [
     path('course-enroll/all/<int:course>/',
          CourseEnrollViews.CourseTeacherEnrollmentsListAPIView.as_view(),
          name='course-enroll-course-id-list'),
+    path('course-enroll/current-student/<int:course>/',
+         CourseEnrollViews.CourseEnrollmentCurrentStudentRetriveUpdateAPIView.
+         as_view(),
+         name='course-enroll-course-id-list'),
     path('course-enroll/<int:pk>/',
          CourseEnrollViews.CourseEnrollmentUpdateRetriveAPIView.as_view(),
          name='course-enroll-retrive-update'),
@@ -170,6 +174,6 @@ urlpatterns = [
          StudProgressViews.StudentProgressCreateAPIView.as_view(),
          name='student-progress-create'),
     path('student-progress/<int:course>/',
-         StudProgressViews.StudentProgressUpdateAPIView.as_view(),
+         StudProgressViews.StudentProgressRetriveUpdateAPIView.as_view(),
          name='student-progress-retrive-update'),
 ]

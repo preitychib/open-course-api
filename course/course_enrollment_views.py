@@ -10,7 +10,7 @@ from rest_framework.filters import OrderingFilter
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import CourseEnrollmentPostSerializer, CourseEnrollmentSerializer, CourseEnrollmentStudentSerializer, CourseEnrollmentTeacherSerializer
+from .serializers import CourseEnrollmentPostSerializer, CourseEnrollmentSerializer, CourseEnrollmentStudentSerializer, CourseEnrollmentTeacherSerializer, CourseEnrollmentStudentUpdateSerializer
 from .models import CourseEnrollmentModel
 from user.permissions import UserIsAdmin, UserIsTeacher, UserIsStudent
 from api.paginator import StandardPagination
@@ -120,12 +120,9 @@ class CourseEnrollmentUpdateRetriveAPIView(generics.GenericAPIView):
         Access: Admin, Student
        
     '''
-    # todo Permissions
     queryset = CourseEnrollmentModel.objects.all()
     serializer_class = CourseEnrollmentSerializer
-    permission_classes = [
-        permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
-    ]
+    permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
     lookup_field = 'pk'
 
     #? get single Course
@@ -153,6 +150,106 @@ class CourseEnrollmentUpdateRetriveAPIView(generics.GenericAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         response = {'detail': 'Course Enrollment details Updated Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_201_CREATED)
+
+
+@extend_schema_view(
+    get=extend_schema(
+        description=
+        'Return Enrollment details of Course of Current Student\n\nargs: Course pk',
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(
+                description=
+                'Return Progress of Course of Current Student\n\nargs: Course pk',
+                response=CourseEnrollmentStudentUpdateSerializer,
+            ),
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='Not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        }),
+    patch=extend_schema(
+        request=CourseEnrollmentStudentUpdateSerializer,
+        description=
+        'Updates the Enrollment details of Current Student in a given Course.\n\nargs: pk',
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(
+                description='Student Progress Updated Successfully', ),
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='Not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        }),
+)
+class CourseEnrollmentCurrentStudentRetriveUpdateAPIView(
+        generics.GenericAPIView):
+    '''
+        Allowed methods: PATCH
+        GET: Return Enrollment details od current student
+        PATCH: Updates the enrollment  of  current Student.
+        Note: Updatation on Student Progress is done via Partial Update method
+        
+        Accessible by: Student
+    '''
+
+    queryset = CourseEnrollmentModel.objects.all()
+    serializer_class = CourseEnrollmentStudentUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated & UserIsStudent]
+    lookup_field = 'pk'
+
+    def get_object(self):
+        try:
+            return CourseEnrollmentModel.objects.get(
+                student=self.request.user.id, course=self.kwargs['course'])
+        except CourseEnrollmentModel.DoesNotExist:
+            return Response({'detail': 'Unable to access enrollment details'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+    #? get student progess
+    def get(self, request, *args, **kwargs):
+        course_enrollment = self.get_object()
+        serializer = CourseEnrollmentStudentUpdateSerializer(course_enrollment)
+        return Response(serializer.data)
+
+    #? Update Student Progress of given Id
+    def patch(self, request, *args, **kwargs):
+
+        course_enrollment = self.get_object()
+        serializer = CourseEnrollmentStudentUpdateSerializer(course_enrollment,
+                                                             data=request.data,
+                                                             partial=True)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+        except Exception as ex:
+            logger.error(str(ex))
+
+            return Response({'detail': str(ex)},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'detail': 'Course Enrollment Details Updated Successfully'}
         logger.info(response)
 
         return Response(response, status=status.HTTP_201_CREATED)
