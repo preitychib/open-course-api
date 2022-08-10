@@ -27,11 +27,13 @@ class CourseModel(models.Model):
     category = models.ForeignKey(
         CategoryModel,
         on_delete=models.SET_NULL,
+        related_name='category',
         null=True,
     )
     #? Many to one relation with User Model
     teacher = models.ForeignKey(
         UserModel,
+        related_name='teacher',
         on_delete=models.CASCADE,
     )
 

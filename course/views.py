@@ -8,8 +8,9 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CourseGetAllSerializer, CourseNestedFullSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
 
+
+from .serializers import CourseFullSerializer, CourseGetAllSerializer, CourseNestedFullSerializer, CoursePublicSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import CourseModel
@@ -157,12 +158,45 @@ class CourseListTeacherAPIView(generics.ListAPIView):
         ),
     },
 ))
+class CoursePublishedListAPIView(generics.ListAPIView):
+    '''
+        Allowed methods: GET
+        GET: Course List with status requested
+        Access: Anyone
+    '''
+    queryset = CourseModel.objects.all()
+    serializer_class = CourseGetAllSerializer
+
+    def get(self, request):
+        queryset = CourseModel.objects.filter(course_status='published')
+
+        serializer = CourseGetAllSerializer(queryset, many=True)
+
+        return Response({'results': list(serializer.data)})
+
+
+@extend_schema_view(get=extend_schema(
+    request=CourseGetAllSerializer,
+    responses={
+        #? 200
+        status.HTTP_200_OK:
+        OpenApiResponse(
+            description='Course List',
+            response=CourseGetAllSerializer,
+        ),
+        #? 400
+        status.HTTP_400_BAD_REQUEST:
+        OpenApiResponse(
+            description='Bad Request',
+            response=OpenApiTypes.OBJECT,
+        ),
+    },
+))
 class CourseRequestedListAPIView(generics.ListAPIView):
     '''
         Allowed methods: GET
-       GET: Course List
-    
-       
+       GET: Course List with status requested
+       Access: Admin
     '''
     queryset = CourseModel.objects.filter(course_status='requested')
     serializer_class = CourseGetAllSerializer

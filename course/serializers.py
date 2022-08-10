@@ -1,4 +1,4 @@
-from unicodedata import category
+
 from rest_framework import serializers
 from course_section.serializers import CourseSectionNestedSerializer
 from .models import CourseModel, CourseEnrollmentModel
@@ -13,6 +13,13 @@ from category.serializers import CatergorySerializer
 
 
 class CourseFullSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseModel
+        fields = '__all__'
+
+
+class CoursePublicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CourseModel

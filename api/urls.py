@@ -97,12 +97,15 @@ urlpatterns = [
     path('course/all-teacher',
          CourseViews.CourseListTeacherAPIView.as_view(),
          name='course-list'),
-    path('course/all-requested/',
-         CourseViews.CourseRequestedListAPIView.as_view(),
-         name='course-requested-list'),
     path('course/change-status/<int:pk>/',
          CourseViews.CourseStatusUpdateAPIView.as_view(),
          name='course-change-status'),
+    path('course/all-requested/',
+         CourseViews.CourseRequestedListAPIView.as_view(),
+         name='course-requested-list'),
+    path('course/all-published/',
+         CourseViews.CoursePublishedListAPIView.as_view(),
+         name='course-published-list'),
 
     #? Course Section
     path('course-section/',
@@ -166,5 +169,4 @@ urlpatterns = [
     path('student-progress/<int:course>/',
          StudProgressViews.StudentProgressUpdateAPIView.as_view(),
          name='student-progress-retrive-update'),
-   
 ]
