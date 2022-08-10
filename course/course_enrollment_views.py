@@ -101,16 +101,16 @@ class CourseStudentEnrollmentsListAPIView(generics.ListAPIView):
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
     ]
-    pagination_class = StandardPagination
+
     filter_backends = [OrderingFilter]
     ordering_fields = 'created_on'
     ordering = '-created_on'
-    filter_backends = [OrderingFilter]
 
-    def get_queryset(self):
+    def get(self, request):
         queryset = CourseEnrollmentModel.objects.filter(
             student=self.request.user)
-        return queryset
+        serializer = CourseEnrollmentStudentSerializer(queryset, many=True)
+        return Response({'results': list(serializer.data)})
 
 
 @extend_schema_view(get=extend_schema(

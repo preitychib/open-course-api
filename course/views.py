@@ -145,7 +145,7 @@ class CourseListTeacherAPIView(generics.ListAPIView):
         #? 200
         status.HTTP_200_OK:
         OpenApiResponse(
-            description='Course List',
+            description='Course List with status published\n\n Access:Anyone',
             response=CourseGetAllSerializer,
         ),
         #? 400
@@ -159,11 +159,14 @@ class CourseListTeacherAPIView(generics.ListAPIView):
 class CoursePublishedListAPIView(generics.ListAPIView):
     '''
         Allowed methods: GET
-        GET: Course List with status requested
+        GET: Course List with status published
         Access: Anyone
     '''
     queryset = CourseModel.objects.all()
     serializer_class = CourseGetAllSerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = 'created_on'
+    ordering = '-created_on'
 
     def get(self, request):
         queryset = CourseModel.objects.filter(course_status='published')
