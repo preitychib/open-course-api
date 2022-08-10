@@ -11,7 +11,7 @@ from rest_framework.filters import OrderingFilter
 from .serializers import CourseFullSerializer, CourseGetAllSerializer, CourseNestedFullSerializer, CoursePublicSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import CourseModel
+from .models import CourseModel, CourseEnrollmentModel
 from user.permissions import UserIsAdmin, UserIsStudent, UserIsTeacher
 from api.paginator import StandardPagination
 
@@ -279,9 +279,13 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         course = self.get_object()
         if request.user.is_authenticated and (
-                request.user.is_admin or course.teacher.id == request.user.id):
+                request.user.is_admin or course.teacher.id == request.user.id
+                or CourseEnrollmentModel.objects.filter(
+                    student=course.teacher.id, course=course.id)).exists():
+
             serializer = CourseNestedFullSerializer(course)
         elif course.course_status == 'published':
+
             serializer = CoursePublicSerializer(course)
         else:
             return Response(
