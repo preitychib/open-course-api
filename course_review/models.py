@@ -21,4 +21,4 @@ class CourseReviewModel(models.Model):
 
     def __str__(self):
         """Unicode representation of CourseReviewModel."""
-        pass
+        return str(self.rating)

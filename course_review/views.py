@@ -10,9 +10,9 @@ from rest_framework.filters import OrderingFilter
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-import course
+from course.models import CourseEnrollmentModel
 
-from .serializers import CourseReviewSerializer, CourseReviewNestedSerializer
+from .serializers import CourseReviewPostSerializer, CourseReviewSerializer, CourseReviewNestedSerializer
 from .models import CourseReviewModel
 from user.permissions import UserIsAdmin, UserIsStudent
 from api.paginator import StandardPagination
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 @extend_schema_view(post=extend_schema(
-    request=CourseReviewSerializer,
+    request=CourseReviewPostSerializer,
     responses={
         #? 201
         status.HTTP_201_CREATED:
@@ -42,7 +42,7 @@ class CourseReviewCreateAPIView(generics.CreateAPIView):
        
     '''
     queryset = CourseReviewModel.objects.all()
-    serializer_class = CourseReviewSerializer
+    serializer_class = CourseReviewPostSerializer
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
     ]
@@ -50,10 +50,12 @@ class CourseReviewCreateAPIView(generics.CreateAPIView):
     # Todo: A alot
     #? Create a new Course Review
     def post(self, request, *args, **kwargs):
-        serializer = CourseReviewSerializer(data=request.data)
+        serializer = CourseReviewPostSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
+
             serializer.save()
+
         except Exception as ex:
             logger.error(str(ex))
 
@@ -185,9 +187,8 @@ class CourseReviewUpdateRetriveDeleteAPIView(generics.GenericAPIView):
                                             partial=True)
         serializer.is_valid(raise_exception=True)
         try:
-            if request.user.is_teacher or (
-                    request.user.is_student
-                    and request.user.id != review.student.id):
+            print(review.student)
+            if request.user.is_teacher or request.user.is_student:
                 return Response(
                     {
                         'detail':
@@ -210,9 +211,7 @@ class CourseReviewUpdateRetriveDeleteAPIView(generics.GenericAPIView):
     def delete(self, request, *args, **kwargs):
         review = self.get_object()
         try:
-            if request.user.is_teacher or (
-                    request.user.is_student
-                    and request.user.id != review.student.id):
+            if request.user.is_teacher or request.user.is_student:
                 return Response(
                     {
                         'detail':
