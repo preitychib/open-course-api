@@ -67,4 +67,4 @@ class CourseEnrollmentModel(models.Model):
     def __str__(self):
         """Unicode representation of CourseEnrollmentModel."""
         # return self.student.name
-        pass
+        return str(self.student)

@@ -139,6 +139,9 @@ urlpatterns = [
     path('course-enroll/all/<int:course>/',
          CourseEnrollViews.CourseTeacherEnrollmentsListAPIView.as_view(),
          name='course-enroll-course-id-list'),
+    path('course-enroll/<int:pk>/',
+         CourseEnrollViews.CourseEnrollmentUpdateRetriveAPIView.as_view(),
+         name='course-enroll-retrive-update'),
 
     #? Course Review
     path('course-review/',

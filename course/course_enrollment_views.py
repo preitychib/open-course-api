@@ -10,7 +10,7 @@ from rest_framework.filters import OrderingFilter
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import CourseEnrollmentPostSerializer, CourseEnrollmentStudentSerializer, CourseEnrollmentTeacherSerializer
+from .serializers import CourseEnrollmentPostSerializer, CourseEnrollmentSerializer, CourseEnrollmentStudentSerializer, CourseEnrollmentTeacherSerializer
 from .models import CourseEnrollmentModel
 from user.permissions import UserIsAdmin, UserIsTeacher, UserIsStudent
 from api.paginator import StandardPagination
@@ -68,6 +68,91 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         response = {'detail': 'Enrolled in Course Successfully'}
+        logger.info(response)
+
+        return Response(response, status=status.HTTP_201_CREATED)
+
+
+@extend_schema_view(
+    get=extend_schema(
+        description='Returns Single Enrollment by Id',
+        responses={
+            #? 200
+            status.HTTP_200_OK:
+            OpenApiResponse(
+                description='Course Enrollment Details',
+                response=CourseEnrollmentSerializer,
+            ),
+            #? 404
+            status.HTTP_404_NOT_FOUND:
+            OpenApiResponse(
+                description='Not found',
+                response=OpenApiTypes.OBJECT,
+            ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        }),
+    patch=extend_schema(
+        request=CourseEnrollmentSerializer,
+        responses={
+            #? 201
+            status.HTTP_201_CREATED:
+            OpenApiResponse(
+                description='Course Enrollment Updated Successfully', ),
+            #? 400
+            status.HTTP_400_BAD_REQUEST:
+            OpenApiResponse(
+                description='Bad Request',
+                response=OpenApiTypes.OBJECT,
+            ),
+        },
+        description=' Updates a Course \nAccess: Admin, Teacher'))
+class CourseEnrollmentUpdateRetriveAPIView(generics.GenericAPIView):
+    '''
+        Allowed methods: Patch
+        GET: Course by ID
+        PATCH: Update a Course 
+        DELETE: Delete a Course 
+        Access: Admin, Student
+       
+    '''
+    # todo Permissions
+    queryset = CourseEnrollmentModel.objects.all()
+    serializer_class = CourseEnrollmentSerializer
+    permission_classes = [
+        permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
+    ]
+    lookup_field = 'pk'
+
+    #? get single Course
+
+    def get(self, request, *args, **kwargs):
+        course_enrollment = self.get_object()
+        serializer = CourseEnrollmentSerializer(course_enrollment)
+        return Response(serializer.data)
+
+    #? Update a Course Enrollment details
+    def patch(self, request, *args, **kwargs):
+        course_enrollmet = self.get_object()
+        serializer = CourseEnrollmentSerializer(course_enrollmet,
+                                                data=request.data,
+                                                partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            serializer.save()
+
+        except Exception as ex:
+            logger.error(str(ex))
+
+            return Response({'detail': str(ex)},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        response = {'detail': 'Course Enrollment details Updated Successfully'}
         logger.info(response)
 
         return Response(response, status=status.HTTP_201_CREATED)

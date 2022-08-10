@@ -140,7 +140,16 @@ class CourseEnrollmentPostSerializer(serializers.ModelSerializer):
             'meta_data',
         ]
 
-    
+
+class CourseEnrollmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CourseEnrollmentModel
+        exclude = [
+            'created_on',
+            
+        ]
+
 
 class CourseEnrollmentStudentSerializer(serializers.ModelSerializer):
     course = CourseFullSerializer(many=True)

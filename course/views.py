@@ -215,7 +215,7 @@ class CourseRequestedListAPIView(generics.ListAPIView):
             #? 200
             status.HTTP_200_OK:
             OpenApiResponse(
-                description='User Details',
+                description='Course Details',
                 response=CourseGetAllSerializer,
             ),
             #? 404
