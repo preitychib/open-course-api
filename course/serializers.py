@@ -131,15 +131,7 @@ class CourseStatusTeacherSerializer(serializers.ModelSerializer):
 #? =============================
 
 
-class CourseEnrollmentStudentSerializer(serializers.ModelSerializer):
-    course = CourseFullSerializer(many=True)
-
-    class Meta:
-        model = CourseEnrollmentModel
-        fields = '__all__'
-
-
-class CourseEnrollmentSerializer(serializers.ModelSerializer):
+class CourseEnrollmentPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CourseEnrollmentModel
@@ -147,6 +139,15 @@ class CourseEnrollmentSerializer(serializers.ModelSerializer):
             'created_on',
             'meta_data',
         ]
+
+    
+
+class CourseEnrollmentStudentSerializer(serializers.ModelSerializer):
+    course = CourseFullSerializer(many=True)
+
+    class Meta:
+        model = CourseEnrollmentModel
+        fields = '__all__'
 
 
 class CourseEnrollmentTeacherSerializer(serializers.ModelSerializer):

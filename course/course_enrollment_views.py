@@ -10,7 +10,7 @@ from rest_framework.filters import OrderingFilter
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import CourseEnrollmentSerializer, CourseEnrollmentStudentSerializer, CourseEnrollmentTeacherSerializer
+from .serializers import CourseEnrollmentPostSerializer, CourseEnrollmentStudentSerializer, CourseEnrollmentTeacherSerializer
 from .models import CourseEnrollmentModel
 from user.permissions import UserIsAdmin, UserIsTeacher, UserIsStudent
 from api.paginator import StandardPagination
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 @extend_schema_view(post=extend_schema(
-    request=CourseEnrollmentSerializer,
+    request=CourseEnrollmentPostSerializer,
     responses={
         #? 201
         status.HTTP_201_CREATED:
@@ -41,7 +41,7 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
        
     '''
     queryset = CourseEnrollmentModel.objects.all()
-    serializer_class = CourseEnrollmentSerializer
+    serializer_class = CourseEnrollmentPostSerializer
     permission_classes = [
         permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
     ]
@@ -49,9 +49,17 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
     # Todo: A alot
     #? Create a new Course Enrollment
     def post(self, request, *args, **kwargs):
-        serializer = CourseEnrollmentSerializer(data=request.data)
+        serializer = CourseEnrollmentPostSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
+            if CourseEnrollmentModel.objects.filter(
+                    student=request.data['student'][0],
+                    course=request.data['course'][0]).exists():
+
+                return Response(
+                    {'detail': 'Student have already enrolled in this course'},
+                    status=status.HTTP_400_BAD_REQUEST)
+
             serializer.save()
         except Exception as ex:
             logger.error(str(ex))
