@@ -8,7 +8,9 @@ from rest_framework.response import Response
 
 from rest_framework.filters import OrderingFilter
 
-from .serializers import CourseFullSerializer, CourseGetAllSerializer, CourseNestedFullSerializer, CoursePublicSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseUpdateSerializer
+from course_review.models import CourseReviewModel
+
+from .serializers import CourseFullSerializer, CourseGetAllSerializer, CourseNestedFullSerializer, CoursePublicSerializer, CourseSerializer, CourseStatusSerializer, CourseStatusTeacherSerializer, CourseStudentNestedFullSerializer, CourseUpdateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import CourseModel, CourseEnrollmentModel
@@ -107,7 +109,7 @@ class CourseListAPIView(generics.ListAPIView):
         OpenApiResponse(
             description=
             'Allowed methods: GET\n\nAccess: Teacher,Admin \n\nGET: Course List owned by teacher',
-            response=CourseGetAllSerializer,
+            response=CourseNestedFullSerializer,
         ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
@@ -278,17 +280,27 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         course = self.get_object()
+
         if request.user.is_authenticated and (
-                request.user.is_admin or course.teacher.id == request.user.id
-                or
-            (request.user.is_student and CourseEnrollmentModel.objects.filter(
-                student=request.user.id, course=course.id).exists())):
+                request.user.is_admin or course.teacher.id == request.user.id):
 
             serializer = CourseNestedFullSerializer(course)
+
+        elif request.user.is_authenticated and CourseEnrollmentModel.objects.filter(
+                student=request.user.id, course=course.id).exists():
+
+            if CourseReviewModel.objects.filter(student=request.user.id,
+                                                course=course.id).exists():
+                course.has_review = True
+
+            serializer = CourseStudentNestedFullSerializer(course)
+
         elif course.course_status == 'published':
 
             serializer = CoursePublicSerializer(course)
+
         else:
+
             return Response(
                 {
                     'detail':
