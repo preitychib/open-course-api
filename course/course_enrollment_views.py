@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
 
 from django_filters.rest_framework import DjangoFilterBackend
-
+from django.http import Http404
 from .serializers import CourseEnrollmentPostSerializer, CourseEnrollmentSerializer, CourseEnrollmentStudentSerializer, CourseEnrollmentTeacherSerializer, CourseEnrollmentStudentUpdateSerializer
 from .models import CourseEnrollmentModel
 from user.permissions import UserIsAdmin, UserIsTeacher, UserIsStudent
@@ -224,16 +224,15 @@ class CourseEnrollmentCurrentStudentRetriveUpdateAPIView(
             return CourseEnrollmentModel.objects.get(
                 student=self.request.user.id, course=self.kwargs['course'])
         except CourseEnrollmentModel.DoesNotExist:
-            return Response({'detail': 'Unable to access enrollment details'},
-                            status=status.HTTP_400_BAD_REQUEST)
+            raise Http404
 
-    #? get student progess
+    #? get enrollment details by course id
     def get(self, request, *args, **kwargs):
         course_enrollment = self.get_object()
-        serializer = CourseEnrollmentStudentUpdateSerializer(course_enrollment)
+        serializer = CourseEnrollmentSerializer(course_enrollment)
         return Response(serializer.data)
 
-    #? Update Student Progress of given Id
+    #? Update enrollment details by course id
     def patch(self, request, *args, **kwargs):
 
         course_enrollment = self.get_object()
