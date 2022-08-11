@@ -71,6 +71,7 @@ class CourseVideoCreateAPIView(generics.CreateAPIView):
             course = CourseModel.objects.filter(
                 section=request.data['section']).first()
             course.total_videos += 1
+            course.save()
             serializer.save()
         except Exception as ex:
             logger.error(str(ex))
@@ -169,6 +170,7 @@ class CourseVideoUpdateDeleteAPIView(generics.GenericAPIView):
                     course_video.section.course.teacher.id == request.user.id):
 
                 course_video.section.course.total_videos -= 1
+                course_video.section.course.save()
                 course_video.delete()
             else:
                 return Response(
