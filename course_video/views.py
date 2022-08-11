@@ -8,6 +8,7 @@ from rest_framework.response import Response
 import course
 from .serializers import CourseVideoFullSerializer, CourseVideoSerializer
 from .models import CourseVideoModel
+from course.models import CourseModel
 from user.permissions import UserIsAdmin, UserIsTeacher
 from rest_framework.filters import OrderingFilter
 from api.paginator import StandardPagination
@@ -67,8 +68,10 @@ class CourseVideoCreateAPIView(generics.CreateAPIView):
         serializer = CourseVideoSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
+            course = CourseModel.objects.filter(
+                section=request.data['section']).first()
             serializer.save()
-
+            course.total_videos += 1
         except Exception as ex:
             logger.error(str(ex))
 
@@ -130,7 +133,7 @@ class CourseVideoUpdateDeleteAPIView(generics.GenericAPIView):
                                            data=request.data,
                                            partial=True)
         serializer.is_valid(raise_exception=True)
-        
+
         try:
 
             if request.user.is_admin or (
@@ -166,7 +169,7 @@ class CourseVideoUpdateDeleteAPIView(generics.GenericAPIView):
                     course_video.section.course.teacher.id == request.user.id):
 
                 course_video.delete()
-
+                course_video.section.course.total_videos -= 1
             else:
                 return Response(
                     {
