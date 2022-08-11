@@ -11,7 +11,7 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from category import serializers
-
+from django.db.models import Count
 from .serializers import CourseSectionFullSerializer, CourseSectionNestedSerializer, CourseSectionSerializer
 from .models import CourseSectionModel
 from user.permissions import UserIsAdmin, UserIsTeacher
@@ -192,6 +192,11 @@ class CourseSectionUpdateDeleteAPIView(generics.GenericAPIView):
                     request.user.is_teacher
                     and course_section.course.course_status == 'drafted'
                     and course_section.course.teacher.id == request.user.id):
+                s = CourseSectionModel.objects.annotate(
+                    videos_count=Count('video')).get(id=course_section.id)
+                video_count = s.videos_count
+                course_section.course.total_videos -= video_count
+                course_section.course.save()
                 course_section.delete()
             else:
                 return Response(
