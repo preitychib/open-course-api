@@ -8,6 +8,7 @@ class CourseVideoModel(models.Model):
 
     video_title = models.TextField()
     description = models.TextField()
+    duration=models.IntegerField(null=True)
     video_link = models.URLField(null=True)
     video_link_public_id = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(default=timezone.now)

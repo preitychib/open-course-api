@@ -19,6 +19,7 @@ class CourseModel(models.Model):
                                      max_length=14,
                                      default='drafted')
     total_videos = models.IntegerField(null=True, default=0)
+    total_duration = models.IntegerField(null=True)
     cover_image = models.URLField(blank=True, null=True)
     cover_image_public_id = models.TextField(blank=True, null=True)
     description = models.TextField(max_length=100)
