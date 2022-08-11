@@ -280,8 +280,9 @@ class CourseUpdateRetriveDeleteAPIView(generics.GenericAPIView):
         course = self.get_object()
         if request.user.is_authenticated and (
                 request.user.is_admin or course.teacher.id == request.user.id
-                or CourseEnrollmentModel.objects.filter(
-                    student=course.teacher.id, course=course.id)).exists():
+                or
+            (request.user.is_student and CourseEnrollmentModel.objects.filter(
+                student=request.user.id, course=course.id).exists())):
 
             serializer = CourseNestedFullSerializer(course)
         elif course.course_status == 'published':
