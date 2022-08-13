@@ -55,7 +55,7 @@ class VideoUploadAPIView(generics.CreateAPIView):
         instance.is_valid(raise_exception=True)
 
         try:
-            #? upload image to cloudinary
+            #? upload video to cloudinary
 
             uploaded_video = cloudinary.uploader.upload_large(
                 instance.validated_data['video'],
@@ -67,7 +67,7 @@ class VideoUploadAPIView(generics.CreateAPIView):
             uploaded_video.pop('api_key')
             logger.info(uploaded_video)
 
-            #? if public_id is provided delete the image from cloudinary
+            #? if public_id is provided delete the video from cloudinary
             if instance.validated_data['public_id']:
                 delete_video = cloudinary.uploader.destroy(
                     public_id=instance.validated_data['public_id'], )

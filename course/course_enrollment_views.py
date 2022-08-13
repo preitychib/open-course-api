@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
             response=OpenApiTypes.OBJECT,
         ),
     },
-    description='Enroll Student in a Course.\n Accessed by: admin and student.'
+    description='Enrolls Student in a Course.\n Accessed by: admin and student.'
 ))
 class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
     '''
@@ -46,7 +46,6 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
         permissions.IsAuthenticated & (UserIsAdmin | UserIsStudent)
     ]
 
-    # Todo: A alot
     #? Create a new Course Enrollment
     def post(self, request, *args, **kwargs):
         serializer = CourseEnrollmentPostSerializer(data=request.data)
@@ -114,9 +113,9 @@ class CourseEnrollmentCreateAPIView(generics.CreateAPIView):
 class CourseEnrollmentUpdateRetriveAPIView(generics.GenericAPIView):
     '''
         Allowed methods: Patch
-        GET: Course by ID
-        PATCH: Update a Course 
-        DELETE: Delete a Course 
+        GET: Course Enrollment by ID
+        PATCH: Update a Course Enrollment
+        DELETE: Delete a Course Enrollment
         Access: Admin, Student
        
     '''
@@ -125,8 +124,7 @@ class CourseEnrollmentUpdateRetriveAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated & (UserIsAdmin)]
     lookup_field = 'pk'
 
-    #? get single Course
-
+    #? get single Course Enrollment
     def get(self, request, *args, **kwargs):
         course_enrollment = self.get_object()
         serializer = CourseEnrollmentSerializer(course_enrollment)
@@ -164,7 +162,7 @@ class CourseEnrollmentUpdateRetriveAPIView(generics.GenericAPIView):
             status.HTTP_200_OK:
             OpenApiResponse(
                 description=
-                'Return Progress of Course of Current Student\n\nargs: Course pk',
+                'Return Course Enrollment details of Current Student\n\nargs: Course pk',
                 response=CourseEnrollmentStudentUpdateSerializer,
             ),
             #? 404
@@ -188,7 +186,7 @@ class CourseEnrollmentUpdateRetriveAPIView(generics.GenericAPIView):
             #? 200
             status.HTTP_200_OK:
             OpenApiResponse(
-                description='Student Progress Updated Successfully', ),
+                description='Course Enrollment Updated Successfully', ),
             #? 404
             status.HTTP_404_NOT_FOUND:
             OpenApiResponse(
@@ -234,7 +232,6 @@ class CourseEnrollmentCurrentStudentRetriveUpdateAPIView(
 
     #? Update enrollment details by course id
     def patch(self, request, *args, **kwargs):
-
         course_enrollment = self.get_object()
         serializer = CourseEnrollmentStudentUpdateSerializer(course_enrollment,
                                                              data=request.data,

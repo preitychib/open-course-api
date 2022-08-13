@@ -101,15 +101,6 @@ class CourseSectionListAPIView(generics.ListAPIView):
     ordering_fields = 'created_on'
     ordering = '-created_on'
 
-    # def list(self, request, *args, **kwargs):
-    #     print(kwargs['course'])
-    #     course_id = kwargs['course']
-    #     courses = CourseSectionModel.objects.filter(course=course_id)
-    #     courses = OrderedDict()
-    #     print(courses.values)
-    #     serializer = self.get_serializer(courses)
-    #     return Response(serializer.data)
-
 
 @extend_schema_view(patch=extend_schema(
     request=CourseSectionSerializer,

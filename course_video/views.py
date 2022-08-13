@@ -5,11 +5,11 @@ from drf_spectacular.types import OpenApiTypes
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
-import course
 from .serializers import CourseVideoFullSerializer, CourseVideoSerializer
 from .models import CourseVideoModel
 from course.models import CourseModel
 from user.permissions import UserIsAdmin, UserIsTeacher
+
 from rest_framework.filters import OrderingFilter
 from api.paginator import StandardPagination
 
@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 class CourseVideoListAPIView(generics.ListAPIView):
     '''
        Allowed methods: GET
-       GET:course Video List
+       GET:Course Video List
        Access:Authenticated
     
        

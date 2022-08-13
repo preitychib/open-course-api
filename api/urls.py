@@ -40,7 +40,7 @@ urlpatterns = [
          SpectacularRedocView.as_view(url_name='schema'),
          name='redoc'),
 
-    # ? Authentication Token
+    #? Authentication Token
     path('auth/signin',
          TokenObtainPairView.as_view(),
          name='token_obtain_pair'),

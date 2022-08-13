@@ -111,7 +111,7 @@ class ContactUsAdminListAPIView(generics.ListAPIView):
     responses={
         #? 201
         status.HTTP_201_CREATED:
-        OpenApiResponse(description='Course Deleted Successfully', ),
+        OpenApiResponse(description='Contact Us Deleted Successfully', ),
         #? 400
         status.HTTP_400_BAD_REQUEST:
         OpenApiResponse(
@@ -124,8 +124,8 @@ class ContactUsAdminUpdateDeleteAPIView(generics.GenericAPIView):
     '''
         Allowed methods: Patch
         
-        PATCH: Update a Course 
-        DELETE: Delete a Course 
+        PATCH: Update a Contact Us
+        DELETE: Delete a Contact Us 
         Access: Admin
        
     '''
