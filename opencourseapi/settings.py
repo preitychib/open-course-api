@@ -51,11 +51,19 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'cloudinary',
+    'django_filters',
 
     #? Custom apps
     'api',
     'user',
     'image_upload',
+    'course',
+    'course_section',
+    'course_video',
+    'category',
+    'contact_us',
+    'student_progress',
+    'course_review',
 ]
 
 MIDDLEWARE = [
@@ -345,6 +353,12 @@ REST_FRAMEWORK = {
     # 'DEFAULT_PERMISSION_CLASSES': (
     #     'rest_framework.permissions.IsAuthenticated',
     # ),
+
+    # ? Django Filters
+    # 'DEFAULT_FILTER_BACKENDS':
+    # ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS':
+    ('django_filters.rest_framework.DjangoFilterBackend', ),
 
     #TODO: Pagination Config
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',

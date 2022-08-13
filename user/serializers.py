@@ -20,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
             'last_login',
             'user_permissions',
+            
         ]
 
 
@@ -120,6 +121,7 @@ class UserUpdateAdminSerializer(serializers.ModelSerializer):
             'is_admin',
             'is_teacher',
             'is_student',
+            'history',
         ]
 
     def validate(self, data):

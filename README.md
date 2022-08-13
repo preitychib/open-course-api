@@ -1,6 +1,8 @@
-# OPEN COURSE WARE
+# OPEN COURSE WARE ![OpenCourseWare Logo](https://res.cloudinary.com/opencourseware/image/upload/c_scale,w_25/v1658930705/upload/logo_lnubvi.webp)
 
-Welcome to Open Course Ware API repo. Let's take plunge 🏊‍♀️ into this Readme File real quick.
+### Welcome to Open Course Ware API Repo.
+
+Let's take plunge 🏊‍♀️ into this Readme File real quick.
 
 ## GETTING STARTED 🌊
 

@@ -14,6 +14,7 @@ class UserModel(AbstractBaseUser, PermissionsMixin):
     profile_image_public_id = models.TextField(blank=True, null=True)
     bio = models.TextField(blank=True)
     created_on = models.DateTimeField(default=timezone.now)
+    history = models.JSONField(null=True)
     is_admin = models.BooleanField(
         default=False,
         help_text='Is the Person Admin or not.',
