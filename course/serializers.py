@@ -175,7 +175,7 @@ class CourseEnrollmentStudentUpdateSerializer(serializers.ModelSerializer):
 
 
 class CourseEnrollmentStudentSerializer(serializers.ModelSerializer):
-    course = CourseFullSerializer(many=True)
+    course = CourseGetAllSerializer(many=True)
 
     class Meta:
         model = CourseEnrollmentModel
