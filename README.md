@@ -14,10 +14,10 @@ In order to run this project you have to follow the following steps:
 
 ```zsh
 # for linux use
-source <location-to-virtual-environment>/upasthiti/bin/activate
+source <location-to-virtual-environment>/open-course-ware-env/bin/activate
 
 # for windows use
-<location-to-virtual-environment>/upasthiti/Scripts/activate
+<location-to-virtual-environment>/open-course-ware-env/Scripts/activate
 ```
 
 - cd into the cloned repo
